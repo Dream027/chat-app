@@ -24,5 +24,5 @@ const chatSchema = new Schema(
     },
 );
 
-export type ChatModel = mongoose.Document & InferSchemaType<typeof chatSchema>;
+export type ChatModel = InferSchemaType<typeof chatSchema>;
 export const Chat = mongoose.model<ChatModel>("Chat", chatSchema);

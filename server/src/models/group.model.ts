@@ -20,7 +20,7 @@ const groupSchema = new Schema(
         },
         groupPicture: {
             type: String,
-            default: "http://localhost:4000/defaultGroup.png", // Picture to be changed later
+            default: "http://localhost:4000/avatar.png", // Picture to be changed later
         },
         blockedUsers: {
             type: [Schema.Types.ObjectId],
@@ -40,10 +40,9 @@ const groupSchema = new Schema(
         },
     },
     {
-        timestaps: true,
+        timestamps: true,
     },
 );
 
-export type GroupModel = mongoose.Document &
-    InferSchemaType<typeof groupSchema>;
+export type GroupModel = InferSchemaType<typeof groupSchema>;
 export const Group = mongoose.model<GroupModel>("Group", groupSchema);

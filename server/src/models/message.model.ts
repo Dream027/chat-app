@@ -44,6 +44,5 @@ const messageSchema = new Schema(
     },
 );
 
-export type MessageModel = mongoose.Document &
-    InferSchemaType<typeof messageSchema>;
+export type MessageModel = InferSchemaType<typeof messageSchema>;
 export const Message = mongoose.model<MessageModel>("Message", messageSchema);
