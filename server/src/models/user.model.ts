@@ -60,20 +60,14 @@ const userSchema = new Schema(
 );
 
 userSchema.methods.generateAccessToken = function () {
-    return jwt.sign(
+    const token = jwt.sign(
         {
             _id: this._id,
         },
         process.env.JWT_SECRET!!,
     );
-};
-
-userSchema.methods.matchOtp = function (otp: string) {
-    if (this.otp === otp) {
-        this.otp = "";
-        return true;
-    }
-    return false;
+    this.accessToken = token;
+    return token;
 };
 
 userSchema.methods.matchPassword = function (password: string) {

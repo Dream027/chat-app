@@ -34,11 +34,15 @@ const registerUser = routeHandler(async (req, res) => {
 
 const loginUser = routeHandler(async (req, res) => {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+        throw new ApiError(400, "All fields are required.");
+    }
     const user = (await User.findOne({
         email,
     })) as UserModel;
     if (!user) {
-        throw new ApiError(400, "User with given mobile number doesn't exist.");
+        throw new ApiError(400, "User with given email doesn't exist.");
     }
 
     if (!user.matchPassword(password)) {
@@ -46,14 +50,13 @@ const loginUser = routeHandler(async (req, res) => {
     }
 
     const accessToken = user.generateAccessToken();
+    await user.save({ validateBeforeSave: false });
     return res
         .status(200)
-        .json(new ApiResponse(200, "User logged in successfully.", {}))
         .cookie("accessToken", accessToken, {
-            httpOnly: true,
-            secure: true,
             expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-        });
+        })
+        .json(new ApiResponse(200, "User logged in successfully.", {}));
 });
 
 const logoutUser = routeHandler(async (req, res) => {

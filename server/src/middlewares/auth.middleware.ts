@@ -7,7 +7,7 @@ import { CustomRequest } from "../types/CustomRequest";
 // check and verify access token from cookies
 export const verifyAccessToken = routeHandler(async (req, res, next) => {
     const token = req.cookies?.accessToken;
-    console.log(req.path);
+
     if (!token) {
         throw new ApiError(401, "Unauthorized access. Please login first.");
     }
