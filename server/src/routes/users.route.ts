@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+    getSession,
     loginUser,
     logoutUser,
     registerUser,
@@ -7,6 +8,8 @@ import {
 import { verifyAccessToken } from "../middlewares/auth.middleware";
 
 const router = Router();
+
+router.route("/profile").get(verifyAccessToken, getSession);
 
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);

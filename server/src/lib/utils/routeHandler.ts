@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
 
 export function routeHandler(
-    fn: (req: Request, res: Response, next: NextFunction) => any,
+    fn: RequestHandler<any, any, any, any>,
 ): RequestHandler<any, any, any, any> {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {

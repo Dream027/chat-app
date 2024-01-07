@@ -1,17 +1,15 @@
 import toast from "react-hot-toast";
-import { instanceOf } from "prop-types";
 
 export function fetchServer(
     url: string,
     method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
-    data: any,
+    data?: any,
     options?: RequestInit,
 ) {
-    console.log(data instanceof FormData);
     const body = data instanceof FormData ? Object.fromEntries(data) : data;
+
     return fetch(`http://localhost:4000/api/v1${url}`, {
         method,
-        credentials: "include",
         headers: {
             ...options?.headers,
             "Content-Type": "application/json",

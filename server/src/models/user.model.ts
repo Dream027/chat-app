@@ -59,7 +59,7 @@ const userSchema = new Schema(
     },
 );
 
-userSchema.methods.generateAccessToken = function () {
+userSchema.methods.generateAccessToken = async function () {
     const token = jwt.sign(
         {
             _id: this._id,
@@ -67,6 +67,7 @@ userSchema.methods.generateAccessToken = function () {
         process.env.JWT_SECRET!!,
     );
     this.accessToken = token;
+    await this.save({ validateBeforeSave: false });
     return token;
 };
 
@@ -83,7 +84,7 @@ userSchema.pre("save", async function (next) {
 
 export type UserModel = Document &
     InferSchemaType<typeof userSchema> & {
-        generateAccessToken: () => string;
+        generateAccessToken: () => Promise<string>;
         matchPassword: (password: string) => boolean;
     };
 export const User = mongoose.model<UserModel>("User", userSchema);

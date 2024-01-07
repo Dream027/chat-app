@@ -49,14 +49,12 @@ const loginUser = routeHandler(async (req, res) => {
         throw new ApiError(400, "Invalid password.");
     }
 
-    const accessToken = user.generateAccessToken();
-    await user.save({ validateBeforeSave: false });
-    return res
-        .status(200)
-        .cookie("accessToken", accessToken, {
-            expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-        })
-        .json(new ApiResponse(200, "User logged in successfully.", {}));
+    const accessToken = await user.generateAccessToken();
+    return res.status(200).json(
+        new ApiResponse(200, "User logged in successfully.", {
+            token: accessToken,
+        }),
+    );
 });
 
 const logoutUser = routeHandler(async (req, res) => {
@@ -72,4 +70,13 @@ const logoutUser = routeHandler(async (req, res) => {
         .clearCookie("accessToken");
 });
 
-export { registerUser, loginUser, logoutUser };
+const getSession = routeHandler(async (req, res) => {
+    const user = (req as CustomRequest).user;
+    console.log(user);
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "User logged in successfully.", { user }));
+});
+
+export { registerUser, loginUser, logoutUser, getSession };

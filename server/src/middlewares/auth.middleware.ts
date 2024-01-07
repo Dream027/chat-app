@@ -6,16 +6,28 @@ import { CustomRequest } from "../types/CustomRequest";
 
 // check and verify access token from cookies
 export const verifyAccessToken = routeHandler(async (req, res, next) => {
-    const token = req.cookies?.accessToken;
+    const authToken = req.headers?.["Authorization"] as string;
+    console.log(req.headers);
 
-    if (!token) {
+    if (!authToken) {
         throw new ApiError(401, "Unauthorized access. Please login first.");
     }
+    if (!authToken.startsWith("Bearer ")) {
+        throw new ApiError(401, "Invalid credentials.");
+    }
+
+    const token = authToken.split(" ")[1];
+    console.log(token);
+
     const verifiedToken = jwt.verify(
         token,
         process.env.JWT_SECRET as string,
     ) as { _id: string };
     const user = (await User.findById(verifiedToken._id)) as UserModel;
+
+    if (!user) {
+        throw new ApiError(401, "User not found. Please login first.");
+    }
     if (!user.accessToken) {
         throw new ApiError(401, "User is not logged in.");
     }
@@ -25,6 +37,6 @@ export const verifyAccessToken = routeHandler(async (req, res, next) => {
             "Your token has been corrupted. Try logout and logging in.",
         );
     }
-    (req as CustomRequest).user = { _id: user._id };
+    (req as CustomRequest).user = user;
     return next();
 });

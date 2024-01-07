@@ -4,14 +4,18 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
 import Link from "next/link";
-import { fetchServer, handleFetch } from "@/utils/fetchServer";
+import { handleFetch } from "@/utils/fetchServer";
 
 export default function LoginForm() {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
-        await handleFetch("/users/login", "POST", formData);
+        const response = await handleFetch("/users/login", "POST", formData);
+        if (response) {
+            console.log(response);
+            localStorage.setItem("accessToken", response.data.token);
+        }
     };
     return (
         <form onSubmit={handleSubmit}>
