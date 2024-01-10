@@ -4,19 +4,19 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
 import Link from "next/link";
-import { handleFetch } from "@/utils/fetchServer";
+import { login } from "@/utils/auth";
 
 export default function LoginForm() {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
-        const response = await handleFetch("/users/login", "POST", formData);
-        if (response) {
-            console.log(response);
-            localStorage.setItem("accessToken", response.data.token);
-        }
+        await login({
+            email: formData.get("email") as string,
+            password: formData.get("password") as string,
+        });
     };
+
     return (
         <form onSubmit={handleSubmit}>
             <div className="mt-8 grid gap-8">

@@ -1,4 +1,4 @@
-import mongoose, { Schema, InferSchemaType } from "mongoose";
+import mongoose, { Schema, InferSchemaType, Document } from "mongoose";
 
 const groupSchema = new Schema(
     {
@@ -44,5 +44,8 @@ const groupSchema = new Schema(
     },
 );
 
-export type GroupModel = InferSchemaType<typeof groupSchema>;
-export const Group = mongoose.model<GroupModel>("Group", groupSchema);
+export type GroupModel = InferSchemaType<typeof groupSchema> & Document;
+export const Group = mongoose.model<InferSchemaType<typeof groupSchema>>(
+    "Group",
+    groupSchema,
+);

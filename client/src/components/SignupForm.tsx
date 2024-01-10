@@ -5,13 +5,18 @@ import Input from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
 import Link from "next/link";
 import { handleFetch } from "@/utils/fetchServer";
+import { register } from "@/utils/auth";
 
 export default function SignupForm() {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
-        await handleFetch("/users/register", "POST", formData);
+        await register({
+            name: formData.get("name") as string,
+            email: formData.get("email") as string,
+            password: formData.get("password") as string,
+        });
     };
     return (
         <form onSubmit={handleSubmit}>

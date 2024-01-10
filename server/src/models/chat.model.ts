@@ -1,4 +1,4 @@
-import mongoose, { Schema, InferSchemaType } from "mongoose";
+import mongoose, { Schema, InferSchemaType, Document } from "mongoose";
 
 const chatSchema = new Schema(
     {
@@ -24,5 +24,8 @@ const chatSchema = new Schema(
     },
 );
 
-export type ChatModel = InferSchemaType<typeof chatSchema>;
-export const Chat = mongoose.model<ChatModel>("Chat", chatSchema);
+export type ChatModel = InferSchemaType<typeof chatSchema> & Document;
+export const Chat = mongoose.model<InferSchemaType<typeof chatSchema>>(
+    "Chat",
+    chatSchema,
+);

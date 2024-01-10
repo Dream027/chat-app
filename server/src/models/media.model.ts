@@ -1,4 +1,4 @@
-import mongoose, { Schema, InferSchemaType } from "mongoose";
+import mongoose, { Schema, InferSchemaType, Document } from "mongoose";
 
 const mediaSchema = new Schema(
     {
@@ -15,5 +15,8 @@ const mediaSchema = new Schema(
     },
 );
 
-export type MediaModel = InferSchemaType<typeof mediaSchema>;
-export const Media = mongoose.model<MediaModel>("Media", mediaSchema);
+export type MediaModel = InferSchemaType<typeof mediaSchema> & Document;
+export const Media = mongoose.model<InferSchemaType<typeof mediaSchema>>(
+    "Media",
+    mediaSchema,
+);

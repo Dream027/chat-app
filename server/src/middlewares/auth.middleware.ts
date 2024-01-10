@@ -6,8 +6,7 @@ import { CustomRequest } from "../types/CustomRequest";
 
 // check and verify access token from cookies
 export const verifyAccessToken = routeHandler(async (req, res, next) => {
-    const authToken = req.headers?.["Authorization"] as string;
-    console.log(req.headers);
+    const authToken = req.headers?.["authorization"] as string;
 
     if (!authToken) {
         throw new ApiError(401, "Unauthorized access. Please login first.");
@@ -17,7 +16,9 @@ export const verifyAccessToken = routeHandler(async (req, res, next) => {
     }
 
     const token = authToken.split(" ")[1];
-    console.log(token);
+    if (!token || token === "undefined" || token === "null") {
+        throw new ApiError(401, "Invalid credentials.");
+    }
 
     const verifiedToken = jwt.verify(
         token,

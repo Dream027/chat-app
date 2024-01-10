@@ -37,13 +37,9 @@ const userSchema = new Schema(
             type: [Schema.Types.ObjectId],
             ref: "User",
         },
-        receivedRequest: {
+        invitations: {
             type: [Schema.Types.ObjectId],
-            ref: "User",
-        },
-        sentRequest: {
-            type: [Schema.Types.ObjectId],
-            ref: "User",
+            ref: "Invitation",
         },
         joinedUsers: {
             type: [Schema.Types.ObjectId],
@@ -87,4 +83,7 @@ export type UserModel = Document &
         generateAccessToken: () => Promise<string>;
         matchPassword: (password: string) => boolean;
     };
-export const User = mongoose.model<UserModel>("User", userSchema);
+export const User = mongoose.model<InferSchemaType<typeof userSchema>>(
+    "User",
+    userSchema,
+);

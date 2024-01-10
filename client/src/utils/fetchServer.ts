@@ -6,8 +6,6 @@ export function fetchServer(
     data?: any,
     options?: RequestInit,
 ) {
-    const body = data instanceof FormData ? Object.fromEntries(data) : data;
-
     return fetch(`http://localhost:4000/api/v1${url}`, {
         method,
         headers: {
@@ -15,7 +13,7 @@ export function fetchServer(
             "Content-Type": "application/json",
             Accept: "application/json",
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(data),
         cache: "no-store",
         ...options,
     });
@@ -24,7 +22,7 @@ export function fetchServer(
 export async function handleFetch(
     url: string,
     method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
-    data: any,
+    data?: any,
     options?: RequestInit,
 ) {
     try {

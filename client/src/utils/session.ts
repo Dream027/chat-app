@@ -1,39 +1,23 @@
-import toast from "react-hot-toast";
-import { fetchServer } from "@/utils/fetchServer";
-
-export async function getSession() {
+export async function getSession(): Promise<Session | null> {
     try {
-        console.log(localStorage.getItem("accessToken"));
-        const response = await fetchServer(
-            "/users/profile",
-            "GET",
-            {},
+        const response = await fetch(
+            "http://localhost:4000/api/v1/users/profile",
             {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem(
-                        "accessToken",
-                    )}`,
+                    Authorization:
+                        "Bearer " + localStorage.getItem("accessToken"),
                 },
             },
         );
-        const data = await response.json();
-        console.log(data);
-
         if (!response.ok) {
-            toast.error(
-                data.message || "Something went wrong. Please try again.",
-            );
             return null;
         }
+        const data = await response.json();
         if (!data.success) {
-            toast.error(
-                data.message || "Something went wrong. Please try again.",
-            );
             return null;
         }
-        return data;
+        return data.data;
     } catch (error: any) {
-        toast.error(error.message);
         return null;
     }
 }

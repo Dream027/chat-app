@@ -1,4 +1,4 @@
-import mongoose, { Schema, InferSchemaType } from "mongoose";
+import mongoose, { Schema, InferSchemaType, Document } from "mongoose";
 
 const messageSchema = new Schema(
     {
@@ -44,5 +44,8 @@ const messageSchema = new Schema(
     },
 );
 
-export type MessageModel = InferSchemaType<typeof messageSchema>;
-export const Message = mongoose.model<MessageModel>("Message", messageSchema);
+export type MessageModel = InferSchemaType<typeof messageSchema> & Document;
+export const Message = mongoose.model<InferSchemaType<typeof messageSchema>>(
+    "Message",
+    messageSchema,
+);

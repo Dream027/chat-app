@@ -3,6 +3,7 @@ import { ApiError } from "../lib/utils/ApiError";
 import { User, UserModel } from "../models/user.model";
 import { ApiResponse } from "../lib/utils/ApiResponse";
 import { CustomRequest } from "../types/CustomRequest";
+import { verifyObjectEntries } from "../lib/utils/verifyObjectEntries";
 
 const registerUser = routeHandler(async (req, res) => {
     const { email, password, name } = req.body;
@@ -66,17 +67,35 @@ const logoutUser = routeHandler(async (req, res) => {
 
     return res
         .status(200)
-        .json(new ApiResponse(200, "User logged out successfully.", {}))
-        .clearCookie("accessToken");
+        .json(new ApiResponse(200, "User logged out successfully.", {}));
 });
 
 const getSession = routeHandler(async (req, res) => {
     const user = (req as CustomRequest).user;
-    console.log(user);
 
     return res
         .status(200)
         .json(new ApiResponse(200, "User logged in successfully.", { user }));
 });
 
-export { registerUser, loginUser, logoutUser, getSession };
+const updateUser = routeHandler(async (req, res) => {
+    const { data } = req.body;
+    if (!data) {
+        throw new ApiError(400, "Data to update is required.");
+    }
+    if (!verifyObjectEntries(data, ["name", "status", "profilePicture"])) {
+        throw new ApiError(400, "Invalid data to update.");
+    }
+
+    const user = (req as CustomRequest).user;
+    const dbUser = await User.findOneAndUpdate(user?._id, data);
+    if (!dbUser) {
+        throw new ApiError(400, "User not found. Try again.");
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "User updated successfully.", {}));
+});
+
+export { registerUser, loginUser, logoutUser, getSession, updateUser };
