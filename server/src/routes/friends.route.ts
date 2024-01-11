@@ -1,9 +1,17 @@
 import { Router } from "express";
-import { getAllFriends } from "../controllers/friends.controller";
+import {
+    getAllFriends,
+    getFriendProfile,
+    inviteFriend,
+} from "../controllers/friends.controller";
 import { verifyAccessToken } from "../middlewares/auth.middleware";
 
 const router = Router();
 
-router.route("/").get(verifyAccessToken, getAllFriends);
+router.use(verifyAccessToken);
+
+router.route("/").get(getAllFriends);
+router.route("/:friendId/invite").post(inviteFriend);
+router.route("/:friendId/profile").post(getFriendProfile);
 
 export default router;

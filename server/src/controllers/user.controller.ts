@@ -73,9 +73,17 @@ const logoutUser = routeHandler(async (req, res) => {
 const getSession = routeHandler(async (req, res) => {
     const user = (req as CustomRequest).user;
 
-    return res
-        .status(200)
-        .json(new ApiResponse(200, "User logged in successfully.", { user }));
+    return res.status(200).json(
+        new ApiResponse(200, "User data fetched successfully.", {
+            user: {
+                _id: user?._id,
+                name: user?.name,
+                email: user?.email,
+                status: user?.status,
+                image: user?.profilePicture,
+            },
+        }),
+    );
 });
 
 const updateUser = routeHandler(async (req, res) => {
@@ -83,7 +91,7 @@ const updateUser = routeHandler(async (req, res) => {
     if (!data) {
         throw new ApiError(400, "Data to update is required.");
     }
-    if (!verifyObjectEntries(data, ["name", "status", "profilePicture"])) {
+    if (!verifyObjectEntries(data, ["name", "status"])) {
         throw new ApiError(400, "Invalid data to update.");
     }
 
