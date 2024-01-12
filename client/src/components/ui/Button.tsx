@@ -10,6 +10,7 @@ const buttonVariants = cva(
                 outlined:
                     "border border-sky-400 bg-transparent text-sky-400 hover:bg-sky-400 hover:text-white focus:bg-sky-300 focus:text-white",
                 ghost: "text-sky-400 hover:bg-sky-400 hover:text-sky-300 focus:text-sky-300",
+                icon: "",
             },
             size: {
                 default: "py-2 px-4",

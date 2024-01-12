@@ -34,7 +34,5 @@ export async function logout() {
             },
         },
     );
-    if (response) {
-        localStorage.setItem("accessToken", "");
-    }
+    localStorage.setItem("accessToken", "");
 }

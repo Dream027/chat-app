@@ -21,9 +21,7 @@ export default function RootLayout({
             <body className={inter.className}>
                 <Toaster />
                 <SessionProvider>
-                    <main className="h-auto min-h-screen bg-sky-50">
-                        {children}
-                    </main>
+                    <main className="h-auto min-h-screen">{children}</main>
                 </SessionProvider>
             </body>
         </html>
