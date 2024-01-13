@@ -45,6 +45,14 @@ const inviteFriend = routeHandler(async (req, res) => {
         throw new ApiError(400, "Friend does not exist.");
     }
 
+    const dbInvitation = await Invitation.findOne({
+        sender: user?._id,
+        receiver: friend._id,
+    });
+    if (dbInvitation) {
+        throw new ApiError(400, "User is already sent invitation.");
+    }
+
     const dbUser = (await User.findById(user?._id)) as UserModel;
 
     const invitation = await Invitation.create({

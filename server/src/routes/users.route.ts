@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+    getInvitations,
     getSession,
     loginUser,
     logoutUser,
@@ -11,6 +12,7 @@ import { verifyAccessToken } from "../middlewares/auth.middleware";
 const router = Router();
 
 router.route("/profile").get(verifyAccessToken, getSession);
+router.route("/invitations").get(verifyAccessToken, getInvitations);
 
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);

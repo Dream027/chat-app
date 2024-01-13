@@ -4,6 +4,7 @@ import { User, UserModel } from "../models/user.model";
 import { ApiResponse } from "../lib/utils/ApiResponse";
 import { CustomRequest } from "../types/CustomRequest";
 import { verifyObjectEntries } from "../lib/utils/verifyObjectEntries";
+import { Invitation } from "../models/invitation.model";
 
 const registerUser = routeHandler(async (req, res) => {
     const { email, password, name } = req.body;
@@ -106,4 +107,92 @@ const updateUser = routeHandler(async (req, res) => {
         .json(new ApiResponse(200, "User updated successfully.", {}));
 });
 
-export { registerUser, loginUser, logoutUser, getSession, updateUser };
+const getInvitations = routeHandler(async (req, res) => {
+    const user = (await User.findById(
+        (req as CustomRequest).user?._id,
+    )) as UserModel;
+    if (!user) {
+        throw new ApiError(400, "User not found. Try again.");
+    }
+
+    const invitations = await Invitation.aggregate([
+        {
+            $match: {
+                _id: {
+                    $in: user.invitations,
+                },
+            },
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "sender",
+                foreignField: "_id",
+                as: "sender",
+                pipeline: [
+                    {
+                        $addFields: {
+                            image: "$profilePicture",
+                        },
+                    },
+                    {
+                        $project: {
+                            name: 1,
+                            email: 1,
+                            image: 1,
+                            status: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "receiver",
+                foreignField: "_id",
+                as: "receiver",
+                pipeline: [
+                    {
+                        $addFields: {
+                            image: "$profilePicture",
+                        },
+                    },
+                    {
+                        $project: {
+                            name: 1,
+                            email: 1,
+                            image: 1,
+                            status: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                sender: {
+                    $arrayElemAt: ["$sender", 0],
+                },
+                receiver: {
+                    $arrayElemAt: ["$receiver", 0],
+                },
+            },
+        },
+    ]);
+
+    return res.status(200).json(
+        new ApiResponse(200, "Invitations fetched successfully.", {
+            invitations,
+        }),
+    );
+});
+
+export {
+    registerUser,
+    loginUser,
+    logoutUser,
+    getSession,
+    updateUser,
+    getInvitations,
+};
