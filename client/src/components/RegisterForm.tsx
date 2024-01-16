@@ -6,9 +6,22 @@ import { getSession } from "@/utils/session";
 import { useForm } from "@/hooks/useForm";
 import { register } from "@/utils/auth";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
-    const { handleSubmit, pending } = useForm(register);
+    const { handleSubmit, pending } = useForm(handleRegister);
+    const router = useRouter();
+
+    async function handleRegister(data: {
+        name: string;
+        email: string;
+        password: string;
+    }) {
+        const success = await register(data);
+        if (success) {
+            router.push("/login");
+        }
+    }
 
     return (
         <div className={styles.page}>

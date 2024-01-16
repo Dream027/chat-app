@@ -179,6 +179,12 @@ const getInvitations = routeHandler(async (req, res) => {
                 },
             },
         },
+        {
+            $project: {
+                sender: 1,
+                receiver: 1,
+            },
+        },
     ]);
 
     return res.status(200).json(

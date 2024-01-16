@@ -1,0 +1,54 @@
+.main {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 1.5rem;
+    height: 100%;
+}
+.main h4 {
+    color: var(--clr-text-dark);
+    margin-bottom: 0.75rem;
+}
+.main > div:first-child {
+    padding: 0.75rem;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.main > div:first-child > div {
+    place-self: start;
+}
+
+.overview > div {
+    display: flex;
+    gap: 0.25rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--clr-text-light);
+    text-decoration: none;
+    align-self: start;
+}
+.link:hover {
+    color: var(--clr-primary-dark);
+}
+
+.session {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.session > div:first-child {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.5rem;
+    background-color: #88dfff;
+}

@@ -46,3 +46,12 @@ button {
 button:hover {
     background: var(--clr-primary-light);
 }
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--clr-text-dark);
+}
+
+p {
+    color: var(--clr-text-light);
+    font-weight: 500;
+}

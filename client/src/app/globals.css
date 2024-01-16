@@ -3,6 +3,9 @@
     --clr-primary-dark: #2ad2ff;
 
     --clr-card-background: #ffffff;
+
+    --clr-text-dark: #777;
+    --clr-text-light: #999;
 }
 
 *,

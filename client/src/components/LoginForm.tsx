@@ -5,9 +5,18 @@ import Link from "next/link";
 import { useForm } from "@/hooks/useForm";
 import { login } from "@/utils/auth";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-    const { handleSubmit, pending } = useForm(login);
+    const router = useRouter();
+    const { handleSubmit, pending } = useForm(handleLogin);
+
+    async function handleLogin(data: { email: string; password: string }) {
+        const success = await login(data);
+        if (success) {
+            router.push("/");
+        }
+    }
 
     return (
         <div className={styles.page}>

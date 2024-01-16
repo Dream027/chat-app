@@ -9,7 +9,7 @@ type SessionContextType = {
     setSession: (session: any) => void;
 };
 
-const SessionContext = createContext<SessionContextType | null>(null);
+export const SessionContext = createContext<SessionContextType | null>(null);
 
 export function useSession() {
     const session = useContext(SessionContext);

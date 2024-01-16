@@ -21,7 +21,7 @@ export async function login({
     cookie.set("accessToken", response?.token ?? "", {
         expires: new Date(2030, 1),
     });
-    return true;
+    return !!response;
 }
 
 export async function register({
@@ -42,7 +42,7 @@ export async function register({
 }
 
 export async function logout() {
-    const response = await handleFetch("/users/logout", "POST");
+    const response = await handleFetch("/users/logout", "POST", {});
 
     cookie.remove("accessToken");
     localStorage.removeItem("accessToken");
