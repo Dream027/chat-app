@@ -37,7 +37,7 @@
     display: flex;
     gap: 0.5rem;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
     padding: 0.75rem;
     width: 80%;
 }
@@ -67,4 +67,15 @@
 }
 .deleteIcon {
     color: red;
+}
+
+.placeholder {
+    display: flex;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--clr-text-light);
 }

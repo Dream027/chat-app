@@ -11,17 +11,17 @@ app.use(
         origin: "http://localhost:3000",
         methods: ["GET", "POST", "PUT", "DELETE"],
         // credentials: true,
-    })
+    }),
 );
 app.use(express.json());
 app.use(
     express.urlencoded({
         limit: "25mb",
         extended: true,
-    })
+    }),
 );
 app.use(cookieParser());
-app.static("public");
+app.use(express.static("public"));
 
 // Routes
 app.use("/api/v1/users", usersRoute);

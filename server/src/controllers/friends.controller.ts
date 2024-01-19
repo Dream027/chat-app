@@ -143,8 +143,6 @@ const getFriendProfile = routeHandler(async (req, res) => {
         joinedUsers: any[];
     }[];
 
-    console.log(user);
-
     if (user[0].invitations.length === 0 && user[0].joinedUsers.length === 0) {
         throw new ApiError(400, "Friend does not exist.");
     }
@@ -163,4 +161,128 @@ const getFriendProfile = routeHandler(async (req, res) => {
     );
 });
 
-export { getAllFriends, inviteFriend, getFriendProfile };
+const inviteFriendByEmail = routeHandler(async (req, res) => {
+    const { email } = req.body;
+    if (!email) {
+        throw new ApiError(400, "Friend id is required.");
+    }
+    if (email === (req as CustomRequest).user?.email) {
+        throw new ApiError(400, "Cannot send invitation to yourself.");
+    }
+
+    const friend = (await User.findOne({ email })) as UserModel;
+    if (!friend) {
+        throw new ApiError(404, "Friend not found.");
+    }
+
+    const user = (await User.findById(
+        (req as CustomRequest).user?._id,
+    )) as UserModel;
+    if (!user) {
+        throw new ApiError(401, "Please login first.");
+    }
+
+    const dbInvitation = await Invitation.findOne({
+        sender: user?._id,
+        receiver: friend._id,
+    });
+    if (dbInvitation) {
+        throw new ApiError(400, "User is already sent invitation.");
+    }
+
+    const invitation = await Invitation.create({
+        sender: user?._id,
+        receiver: friend._id,
+    });
+
+    user.invitations.push(invitation._id);
+    await user.save();
+
+    friend.invitations.push(invitation._id);
+    await friend.save();
+
+    const invitationToSend = await Invitation.aggregate([
+        {
+            $match: {
+                _id: invitation._id,
+            },
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "sender",
+                foreignField: "_id",
+                as: "sender",
+                pipeline: [
+                    {
+                        $addFields: {
+                            image: "$profilePicture",
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            email: 1,
+                            image: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "receiver",
+                foreignField: "_id",
+                as: "receiver",
+                pipeline: [
+                    {
+                        $addFields: {
+                            image: "$profilePicture",
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            email: 1,
+                            image: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                sender: {
+                    $first: "$sender",
+                },
+                receiver: {
+                    $first: "$receiver",
+                },
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+                sender: 1,
+                receiver: 1,
+            },
+        },
+    ]);
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                "Invitation sent successfully.",
+                invitationToSend,
+            ),
+        );
+});
+
+export { getAllFriends, inviteFriend, getFriendProfile, inviteFriendByEmail };

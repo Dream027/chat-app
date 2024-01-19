@@ -3,14 +3,37 @@
 import { useFetch } from "@/hooks/useFetch";
 import { useSession } from "@/context/SessionProvider";
 import styles from "./styles/add-friends.module.css";
-import { CheckCircle, Trash2 } from "lucide-react";
+import { CheckCircle, Loader, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { handleFetch } from "@/utils/fetch";
 
 export default function AddFriends() {
-    const { data } = useFetch<{ invitations: Invitation[] }>(
+    const { data, loading } = useFetch<{ invitations: Invitation[] }>(
         "/users/invitations",
     );
     const invitations = data?.invitations;
     const session = useSession();
+    const [receivedInvitations, setReceivedInvitations] = useState<
+        Invitation[] | undefined | null
+    >(null);
+    const [sentInvitations, setSentInvitations] = useState<
+        Invitation[] | null | undefined
+    >(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
+
+    useEffect(() => {
+        setReceivedInvitations(
+            invitations?.filter(
+                (invitation) => invitation.receiver._id === session?._id,
+            ),
+        );
+        setSentInvitations(
+            invitations?.filter(
+                (invitation) => invitation.sender._id === session?._id,
+            ),
+        );
+    }, [data, invitations, session]);
 
     async function deleteInvitation(id: string) {}
 
@@ -18,26 +41,57 @@ export default function AddFriends() {
 
     async function rejectInvitation(id: string) {}
 
+    async function inviteFriend() {
+        const email = inputRef?.current?.value;
+        if (!email) {
+            toast.error("Email field is required.");
+            return;
+        }
+        const invitation = (await handleFetch("/friends/invite", "POST", {
+            email,
+        })) as Invitation[] | null;
+
+        if (!invitation) {
+            return;
+        }
+
+        setSentInvitations((prevState) => {
+            if (!prevState) {
+                return [invitation[0]];
+            }
+            return [...prevState, invitation[0]];
+        });
+    }
+
     return (
         <div className={styles.main}>
             <div>
                 <div>
-                    <label htmlFor="name">Username or Email</label>
-                    <input type="text" id="name" placeholder="Name or Email" />
+                    <label htmlFor="name">Email Address</label>
+                    <input
+                        ref={inputRef}
+                        type="email"
+                        id="name"
+                        placeholder="Friend's Email"
+                    />
                 </div>
-                <button>Add Friend</button>
+                <button onClick={inviteFriend}>Add Friend</button>
             </div>
 
             <div className={styles.container}>
                 <div>
                     <h3>Sent Requests</h3>
                     <div className={styles.content}>
-                        {invitations
-                            ?.filter(
-                                (invitation) =>
-                                    invitation.sender._id === session?._id,
-                            )
-                            .map((invitation) => (
+                        {!sentInvitations || sentInvitations.length === 0 ? (
+                            <div className={styles.placeholder}>
+                                {loading ? (
+                                    <Loader />
+                                ) : (
+                                    <div>No sent invitations</div>
+                                )}
+                            </div>
+                        ) : (
+                            sentInvitations.map((invitation) => (
                                 <div
                                     key={invitation._id}
                                     className={`card ${styles.card}`}
@@ -58,19 +112,25 @@ export default function AddFriends() {
                                         </div>
                                     </div>
                                 </div>
-                            ))}
+                            ))
+                        )}
                     </div>
                 </div>
 
                 <div>
                     <h3>Received Requests</h3>
                     <div className={styles.content}>
-                        {invitations
-                            ?.filter(
-                                (invitation) =>
-                                    invitation.sender._id !== session?._id,
-                            )
-                            .map((invitation) => (
+                        {!receivedInvitations ||
+                        receivedInvitations.length === 0 ? (
+                            <div className={styles.placeholder}>
+                                {loading ? (
+                                    <Loader />
+                                ) : (
+                                    <div>No received invitations</div>
+                                )}
+                            </div>
+                        ) : (
+                            receivedInvitations.map((invitation) => (
                                 <div
                                     key={invitation._id}
                                     className={`card ${styles.card}`}
@@ -99,7 +159,8 @@ export default function AddFriends() {
                                         </div>
                                     </div>
                                 </div>
-                            ))}
+                            ))
+                        )}
                     </div>
                 </div>
             </div>
