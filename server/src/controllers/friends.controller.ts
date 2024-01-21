@@ -182,6 +182,46 @@ const inviteFriendByEmail = routeHandler(async (req, res) => {
         throw new ApiError(401, "Please login first.");
     }
 
+    const dbUser = await User.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(
+                    (req as CustomRequest).user?._id,
+                ),
+            },
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "joinedUsers",
+                foreignField: "_id",
+                as: "joinedUsers",
+                pipeline: [
+                    {
+                        $match: {
+                            _id: new mongoose.Types.ObjectId(friend._id),
+                        },
+                    },
+                    {
+                        $project: {
+                            name: 1,
+                            _id: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $project: {
+                joinedUsers: 1,
+            },
+        },
+    ]);
+
+    if (dbUser[0].joinedUsers.length > 0) {
+        throw new ApiError(400, "User is already joined.");
+    }
+
     const dbInvitation = await Invitation.findOne({
         sender: user?._id,
         receiver: friend._id,
@@ -285,4 +325,132 @@ const inviteFriendByEmail = routeHandler(async (req, res) => {
         );
 });
 
-export { getAllFriends, inviteFriend, getFriendProfile, inviteFriendByEmail };
+const deleteInvitation = routeHandler(async (req, res) => {
+    const { friendId } = req.params;
+    if (!friendId) {
+        throw new ApiError(400, "Friend id is required.");
+    }
+    const friend = await User.findById(friendId);
+    if (!friend) {
+        throw new ApiError(400, "Friend does not exist.");
+    }
+
+    const user = (await User.findById(
+        (req as CustomRequest).user?._id,
+    )) as UserModel;
+    const dbInvitation = await Invitation.findOne({
+        sender: user?._id,
+        receiver: friend._id,
+    });
+    if (!dbInvitation) {
+        throw new ApiError(400, "Invitation does not exist.");
+    }
+
+    user.invitations = user.invitations.filter(
+        (id) => id.toString() !== dbInvitation._id.toString(),
+    );
+    await user.save();
+
+    friend.invitations = friend.invitations.filter(
+        (id) => id.toString() !== dbInvitation._id.toString(),
+    );
+    await friend.save();
+
+    await Invitation.findByIdAndDelete(dbInvitation._id);
+
+    res.status(200).json(
+        new ApiResponse(200, "Invitation deleted successfully.", {}),
+    );
+});
+
+const rejectInvitation = routeHandler(async (req, res) => {
+    const { friendId } = req.params;
+    if (!friendId) {
+        throw new ApiError(400, "Friend id is required.");
+    }
+    const friend = await User.findById(friendId);
+    if (!friend) {
+        throw new ApiError(400, "Friend does not exist.");
+    }
+
+    const user = (await User.findById(
+        (req as CustomRequest).user?._id,
+    )) as UserModel;
+    const dbInvitation = await Invitation.findOne({
+        receiver: user?._id,
+        sender: friend._id,
+    });
+    if (!dbInvitation) {
+        throw new ApiError(400, "Invitation does not exist.");
+    }
+
+    user.invitations = user.invitations.filter(
+        (id) => id.toString() !== dbInvitation._id.toString(),
+    );
+    await user.save();
+
+    friend.invitations = friend.invitations.filter(
+        (id) => id.toString() !== dbInvitation._id.toString(),
+    );
+    await friend.save();
+
+    await Invitation.findByIdAndDelete(dbInvitation._id);
+
+    res.status(200).json(
+        new ApiResponse(200, "Invitation rejected successfully.", {}),
+    );
+});
+
+const acceptInvitation = routeHandler(async (req, res) => {
+    const { friendId } = req.params;
+    if (!friendId) {
+        throw new ApiError(400, "Friend id is required.");
+    }
+    const friend = await User.findById(friendId);
+    if (!friend) {
+        throw new ApiError(400, "Friend does not exist.");
+    }
+
+    const user = (await User.findById(
+        (req as CustomRequest).user?._id,
+    )) as UserModel;
+    if (!user) {
+        throw new ApiError(401, "Please login first.");
+    }
+
+    const dbInvitation = await Invitation.findOne({
+        sender: friend._id,
+        receiver: user?._id,
+    });
+    if (!dbInvitation) {
+        throw new ApiError(400, "Invitation does not exist.");
+    }
+
+    user.invitations = user.invitations.filter(
+        (id) => id.toString() !== dbInvitation._id.toString(),
+    );
+    user.joinedUsers.push(friend._id);
+    await user.save();
+
+    friend.invitations = friend.invitations.filter(
+        (id) => id.toString() !== dbInvitation._id.toString(),
+    );
+    friend.joinedUsers.push(user._id);
+    await friend.save();
+
+    await Invitation.findByIdAndDelete(dbInvitation._id);
+
+    res.status(200).json(
+        new ApiResponse(200, "Invitation accepted successfully.", {}),
+    );
+});
+
+export {
+    getAllFriends,
+    inviteFriend,
+    getFriendProfile,
+    inviteFriendByEmail,
+    deleteInvitation,
+    acceptInvitation,
+    rejectInvitation,
+};
