@@ -1,9 +1,17 @@
-@import "utilities.css";
-
 :root {
-  --clr-primary-light: #2ad2ff;
-  --clr-primary-dark: #4cc6f8;
+  --clr-primary-light: #7adeff;
+  --clr-primary-dark: #3ed6ff;
   --clr-text-light: #aaa;
+  --clr-text-dark: #888;
+  --clr-text-heading: #666;
+
+  --clr-card-bg: #fff;
+}
+
+@media (max-width: 780px) {
+  :root {
+    font-size: 12px;
+  }
 }
 
 * {
@@ -19,6 +27,60 @@ body {
   overflow: hidden;
 }
 
-main {
-  max-height: 100svh;
+input {
+  background-color: transparent;
+  outline: none;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #eeeeee;
+  padding: 0.5rem 1rem;
+  color: var(--clr-text-dark);
+}
+input:active,
+input:focus {
+  border: 1px solid var(--clr-primary-light);
+}
+
+label {
+  color: var(--clr-text-dark);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+p {
+  color: var(--clr-text-dark);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--clr-text-heading);
+  font-weight: 600;
+  text-align: center;
+}
+
+button {
+  padding: 0.75em 1.5em;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--clr-primary-dark);
+  color: #fff;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+.btn-primary:hover {
+  background-color: var(--clr-primary-light);
+}
+
+.card {
+  background-color: var(--clr-card-bg);
+  border: 1px solid #eeeeee55;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
 }

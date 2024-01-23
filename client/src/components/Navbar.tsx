@@ -3,8 +3,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 const routes = [
-    { path: "/dashboard", name: "Home" },
-    { path: "/groups", name: "Groups" },
+    { path: "/", name: "Home" },
+    { path: "/login", name: "Login" },
 ];
 
 export default function Navbar() {
