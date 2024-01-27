@@ -19,16 +19,22 @@ const createGroup = routeHandler(async (req, res) => {
         throw new ApiError(400, "Login first.");
     }
 
-    const group = await Group.create({
+    const group = (await Group.create({
         name,
         groupCreator: dbUser._id,
-    });
+    })) as GroupModel;
     dbUser.groups.push(group._id);
     await dbUser.save();
 
-    return res
-        .status(201)
-        .json(new ApiResponse(201, "Group created successfully.", group));
+    return res.status(201).json(
+        new ApiResponse(201, "Group created successfully.", {
+            _id: group._id,
+            name: group.name,
+            creator: group.groupCreator,
+            image: group.groupPicture,
+            isPublic: group.isPublic,
+        }),
+    );
 });
 
 const deleteGroup = routeHandler(async (req, res) => {
@@ -43,10 +49,7 @@ const deleteGroup = routeHandler(async (req, res) => {
         throw new ApiError(400, "Login first.");
     }
 
-    if (
-        group.groupCreator?.toString() !== user?._id.toString() ||
-        group.adminUsers.some((id) => id.toString() === user._id)
-    ) {
+    if (group.groupCreator?.toString() !== user?._id.toString()) {
         throw new ApiError(400, "You are not authorized to delete this group.");
     }
 
@@ -62,12 +65,43 @@ const deleteGroup = routeHandler(async (req, res) => {
         await dbUser.save();
     }
 
-    const deletedGroup = await Group.findByIdAndDelete(groupId);
-    return res
-        .status(200)
-        .json(
-            new ApiResponse(200, "Group deleted successfully.", deletedGroup),
-        );
+    const deletedGroup = (await Group.findByIdAndDelete(
+        groupId,
+    )) as unknown as GroupModel;
+    return res.status(200).json(
+        new ApiResponse(200, "Group deleted successfully.", {
+            _id: deletedGroup._id,
+            name: deletedGroup.name,
+            creator: deletedGroup.groupCreator,
+            image: deletedGroup.groupPicture,
+            isPublic: deletedGroup.isPublic,
+        }),
+    );
 });
 
-export { createGroup, deleteGroup };
+const joinGroup = routeHandler(async (req, res) => {
+    const { groupId } = req.params;
+    const user = (req as CustomRequest).user;
+
+    const group = (await Group.findById(groupId)) as GroupModel;
+    if (!group) {
+        throw new ApiError(400, "Group not found.");
+    }
+
+    if (
+        group.members.includes(user?._id) ||
+        group.adminUsers.includes(user?._id) ||
+        group.groupCreator?.toString() === user?._id.toString()
+    ) {
+        throw new ApiError(400, "You are already a member of this group.");
+    }
+
+    group.members.push(user?._id);
+    await group.save();
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "Group joined successfully.", group));
+});
+
+export { createGroup, deleteGroup, joinGroup };

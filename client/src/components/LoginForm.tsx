@@ -1,9 +1,19 @@
 import styles from "@/styles/auth.module.css";
 import Link from "next/link";
 import { useForm } from "@/hooks/useForm";
+import { login } from "@/utils/auth";
+import { useRouter } from "next/router";
 
 export default function LoginForm() {
     const { handleSubmit } = useForm();
+    const router = useRouter();
+
+    async function handleLogin(data?: any) {
+        const success = await login(data);
+        if (success) {
+            router.push("/");
+        }
+    }
 
     return (
         <div className={styles.page}>
@@ -12,7 +22,7 @@ export default function LoginForm() {
                 <div>
                     <h2>Login in to your account</h2>
                     <div>
-                        <form>
+                        <form onSubmit={handleSubmit(handleLogin)}>
                             <div>
                                 <label htmlFor="email">Email</label>
                                 <input

@@ -52,11 +52,16 @@ const loginUser = routeHandler(async (req, res) => {
     }
 
     const accessToken = await user.generateAccessToken();
-    return res.status(200).json(
-        new ApiResponse(200, "User logged in successfully.", {
-            token: accessToken,
-        }),
-    );
+    return res
+        .cookie("accessToken", accessToken, {
+            maxAge: 1000 * 60 * 60 * 24 * 99,
+        })
+        .status(200)
+        .json(
+            new ApiResponse(200, "User logged in successfully.", {
+                token: accessToken,
+            }),
+        );
 });
 
 const logoutUser = routeHandler(async (req, res) => {
@@ -67,6 +72,7 @@ const logoutUser = routeHandler(async (req, res) => {
     await dbUser.save();
 
     return res
+        .clearCookie("accessToken")
         .status(200)
         .json(new ApiResponse(200, "User logged out successfully.", {}));
 });
@@ -194,6 +200,67 @@ const getInvitations = routeHandler(async (req, res) => {
     );
 });
 
+const getUserProfile = routeHandler(async (req, res) => {
+    const { userId } = req.params;
+
+    const user = (await User.findById(userId)) as UserModel;
+    if (!user) {
+        throw new ApiError(404, "User not found. Try again.");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "User fetched successfully.", {
+            _id: user?._id,
+            name: user?.name,
+            email: user?.email,
+            status: user?.status,
+            image: user?.profilePicture,
+        }),
+    );
+});
+
+const removeFriend = routeHandler(async (req, res) => {
+    const user = (req as CustomRequest).user;
+    const { friendId } = req.params;
+    if (!user) {
+        throw new ApiError(401, "Please login first.");
+    }
+    if (!friendId) {
+        throw new ApiError(400, "Friend id is required.");
+    }
+
+    const friend = (await User.findById(friendId)) as UserModel;
+    if (!friend) {
+        throw new ApiError(400, "Friend does not exist.");
+    }
+
+    const dbUser = (await User.findById(user?._id)) as UserModel;
+
+    if (!dbUser) {
+        throw new ApiError(401, "Invalid Credentials.");
+    }
+
+    if (!dbUser.joinedUsers.includes(friendId)) {
+        throw new ApiError(401, "You are not friends with this user.");
+    }
+
+    dbUser.joinedUsers = dbUser.joinedUsers.filter(
+        (id) => id.toString() !== friendId,
+    );
+    await dbUser.save();
+
+    friend.joinedUsers = friend.joinedUsers.filter(
+        (id) => id.toString() !== dbUser._id.toString(),
+    );
+    await friend.save();
+
+    return res.status(200).json(
+        new ApiResponse(200, "Friend removed successfully.", {
+            _id: friend?._id,
+        }),
+    );
+});
+
 export {
     registerUser,
     loginUser,
@@ -201,4 +268,6 @@ export {
     getSession,
     updateUser,
     getInvitations,
+    getUserProfile,
+    removeFriend,
 };

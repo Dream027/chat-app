@@ -5,6 +5,8 @@ import { User, UserModel } from "../models/user.model";
 import { ApiError } from "../lib/utils/ApiError";
 import { Invitation, InvitationModel } from "../models/invitation.model";
 import mongoose from "mongoose";
+import { Chat, ChatModel } from "../models/chat.model";
+import { generateChatId } from "../lib/utils/generateChatId";
 
 const getAllFriends = routeHandler(async (req, res) => {
     const user = (req as CustomRequest).user;
@@ -21,15 +23,47 @@ const getAllFriends = routeHandler(async (req, res) => {
                 localField: "joinedUsers",
                 foreignField: "_id",
                 as: "joinedUsers",
+                pipeline: [
+                    {
+                        $addFields: {
+                            image: "$profilePicture",
+                        },
+                    },
+                    {
+                        $project: {
+                            name: 1,
+                            _id: 1,
+                            email: 1,
+                            status: 1,
+                            image: 1,
+                        },
+                    },
+                ],
             },
         },
     ]);
 
-    return res.status(200).json(
-        new ApiResponse(200, "Fetched user friends successfully.", {
-            friends: dbUser[0].joinedUsers,
-        }),
-    );
+    const response: any = [];
+
+    for (const friend of dbUser[0].joinedUsers) {
+        const chat = (await Chat.findOne({
+            id: generateChatId(user?._id, friend._id),
+        })) as ChatModel;
+        response.push({
+            ...friend,
+            lastMassage: chat.messages[chat.messages.length - 1] ?? null,
+        });
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                "Fetched user friends successfully.",
+                response,
+            ),
+        );
 });
 
 const inviteFriend = routeHandler(async (req, res) => {
@@ -43,6 +77,9 @@ const inviteFriend = routeHandler(async (req, res) => {
     const friend = (await User.findById(friendId)) as UserModel;
     if (!friend) {
         throw new ApiError(400, "Friend does not exist.");
+    }
+    if (friend._id.toString() === user?._id.toString()) {
+        throw new ApiError(400, "You cannot invite yourself.");
     }
 
     const dbInvitation = await Invitation.findOne({
@@ -406,7 +443,10 @@ const acceptInvitation = routeHandler(async (req, res) => {
     if (!friendId) {
         throw new ApiError(400, "Friend id is required.");
     }
-    const friend = await User.findById(friendId);
+    if (friendId === (req as CustomRequest).user?._id) {
+        throw new ApiError(400, "You cannot add yourself as a friend.");
+    }
+    const friend = (await User.findById(friendId)) as UserModel;
     if (!friend) {
         throw new ApiError(400, "Friend does not exist.");
     }
@@ -440,8 +480,35 @@ const acceptInvitation = routeHandler(async (req, res) => {
 
     await Invitation.findByIdAndDelete(dbInvitation._id);
 
+    await Chat.create({
+        id: generateChatId(user._id, friend._id),
+        users: [user._id, friend._id],
+    });
+
     res.status(200).json(
         new ApiResponse(200, "Invitation accepted successfully.", {}),
+    );
+});
+
+const searchFriend = routeHandler(async (req, res) => {
+    const { email } = req.body;
+    if (!email) {
+        throw new ApiError(401, "Email is required.");
+    }
+
+    const friend = (await User.findOne({ email })) as UserModel;
+    if (!friend) {
+        throw new ApiError(404, "Friend does not exist.");
+    }
+
+    res.status(200).json(
+        new ApiResponse(200, "Friend found successfully.", {
+            _id: friend._id,
+            name: friend.name,
+            image: friend.profilePicture,
+            email: friend.email,
+            status: friend.status,
+        }),
     );
 });
 
@@ -453,4 +520,5 @@ export {
     deleteInvitation,
     acceptInvitation,
     rejectInvitation,
+    searchFriend,
 };

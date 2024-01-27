@@ -2,6 +2,10 @@ import mongoose, { Schema, InferSchemaType, Document } from "mongoose";
 
 const chatSchema = new Schema(
     {
+        id: {
+            type: String,
+            required: true,
+        },
         messages: {
             type: [Schema.Types.ObjectId],
             ref: "Message",

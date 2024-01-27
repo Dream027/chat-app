@@ -1,0 +1,69 @@
+.main {
+    height: calc(100svh - 5.35rem);
+    display: grid;
+    grid-template-columns: 18rem 1fr;
+    gap: 1.5rem;
+}
+
+.content {
+    display: grid;
+    grid-template-rows: 1fr 4rem;
+    gap: 0.75rem;
+    padding: 0 0.75rem;
+    height: inherit;
+}
+.content > div {
+    height: 100%;
+}
+
+.session {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.logout_btn {
+    cursor: pointer;
+    color: var(--clr-text-dark);
+}
+
+.chat_container {
+    height: calc(100svh - 12rem);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.chat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem 0.75rem;
+    padding: 0.5rem;
+    border-radius: 1rem;
+}
+.chat > div:nth-child(2) {
+    flex: 1;
+}
+.chat h3 {
+    text-align: start;
+}
+.active_chat {
+    background-color: var(--clr-light-blue);
+}
+.chat span {
+    align-self: start;
+    background-color: var(--clr-secondary);
+    border-radius: 50%;
+    color: white;
+    padding: 0.25rem;
+    width: 0.75rem;
+    height: 0.75rem;
+}
+.chat p {
+    height: 1lh;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

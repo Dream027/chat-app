@@ -1,7 +1,20 @@
 import styles from "@/styles/auth.module.css";
 import Link from "next/link";
+import { useForm } from "@/hooks/useForm";
+import { register } from "@/utils/auth";
+import { useRouter } from "next/router";
 
 export default function SignupForm() {
+    const { handleSubmit } = useForm();
+    const router = useRouter();
+
+    async function handleSignup(data?: any) {
+        const success = await register(data);
+        if (success) {
+            router.push("/login");
+        }
+    }
+
     return (
         <div className={styles.page}>
             <div className={`card ${styles.container}`}>
@@ -9,7 +22,7 @@ export default function SignupForm() {
                 <div>
                     <h2>Create to your account</h2>
                     <div>
-                        <form>
+                        <form onSubmit={handleSubmit(handleSignup)}>
                             <div>
                                 <label htmlFor="name">Username</label>
                                 <input

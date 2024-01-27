@@ -23,7 +23,7 @@ const userSchema = new Schema(
         },
         profilePicture: {
             type: String,
-            default: "http://localhost:4000/avatar.png", // Picture to be changed later
+            default: "http://localhost:4000/avatar.webp",
         },
         status: {
             type: String,
