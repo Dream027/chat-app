@@ -1,0 +1,24 @@
+.main {
+    display: grid;
+    place-items: center;
+    height: 100svh;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 2.5rem;
+    background-color: var(--clr-card-bg);
+    border: 1px solid var(--clr-card-border);
+    border-radius: 1rem;
+    box-shadow: 10px 10px 20px var(--clr-shadow);
+    padding: 2rem;
+    width: 90%;
+    max-width: 700px;
+}
+
+.card > div:nth-child(3) {
+    display: flex;
+    gap: 0.5rem;
+}

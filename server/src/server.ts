@@ -3,6 +3,7 @@ import { app } from "./app";
 import { join } from "path";
 import "dotenv/config";
 import { readFileSync } from "fs";
+import { connectToDb } from "./db";
 
 const server = createServer(
     {
@@ -13,4 +14,7 @@ const server = createServer(
 );
 
 const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+(async () => {
+    await connectToDb();
+    server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+})();
