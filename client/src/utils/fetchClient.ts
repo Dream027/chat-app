@@ -16,5 +16,5 @@ export function fetchClient(
         cache: "no-store",
     })
         .then((res) => res.json())
-        .catch((err) => console.error(err.message));
+        .catch((err) => console.error(err));
 }

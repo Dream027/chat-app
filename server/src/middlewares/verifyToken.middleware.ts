@@ -1,7 +1,6 @@
-import { User } from "../modals/User.modal";
 import { ApiError } from "../utils/ApiError";
 import { asyncHandler } from "../utils/asyncHandler";
-import jwt from "jsonwebtoken";
+import { redis } from "../db";
 
 export const verifyToken = asyncHandler(async (req, res, next) => {
     const token =
@@ -10,16 +9,11 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
         throw new ApiError(400, "Please login first.");
     }
 
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET!!) as string;
-    if (!decodedToken) {
-        throw new ApiError(400, "Invalid credentials.");
-    }
-
-    const dbUser = await User.findById(decodedToken);
+    const dbUser = await redis.get(`session-${token}`);
     if (!dbUser) {
         throw new ApiError(400, "Invalid credentials.");
     }
 
-    req.user = { _id: decodedToken };
+    req.user = token;
     next();
 });

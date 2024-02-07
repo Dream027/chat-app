@@ -28,23 +28,25 @@ export default function Sidebar() {
 
     return (
         <div className={styles.main}>
-            {/*Chats*/}
-            <div></div>
-
             <div className={styles.session_container}>
                 <div>
                     <div className={styles.session_image}>
                         <Image src={session?.image!} alt={""} fill />
                     </div>
                     <div>
-                        <h4>{session?.name}</h4>
-                        <p>{session?.email}</p>
+                        <div>
+                            <h4>{session?.name}</h4>
+                            <p>{session?.email}</p>
+                        </div>
+                        <div className={styles.logout} onClick={handleLogout}>
+                            <LogOut />
+                        </div>
                     </div>
                 </div>
-                <div className={styles.logout} onClick={handleLogout}>
-                    <LogOut />
-                </div>
             </div>
+
+            {/*Chats*/}
+            <div></div>
         </div>
     );
 }

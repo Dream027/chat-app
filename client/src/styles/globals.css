@@ -1,5 +1,6 @@
 :root {
     --sidebar-width: 16rem;
+    --sidebar-header-height: 12rem;
     --navbar-height: 4rem;
 
     --clr-text-light: #cccccc;
