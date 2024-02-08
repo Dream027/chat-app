@@ -18,6 +18,10 @@
     max-width: 700px;
 }
 
+.card:not(:has(input[name="name"])) {
+    max-width: 600px;
+}
+
 .card > div:nth-child(3) {
     display: flex;
     gap: 0.5rem;

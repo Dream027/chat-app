@@ -8,7 +8,6 @@ import { SessionContext } from "@/contexts/SessionProvider";
 import { fetchClient } from "@/utils/fetchClient";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
-import LoginPage from "@/pages/login";
 
 export default function RegisterPage() {
     const [loading, setLoading] = useState(false);
@@ -85,4 +84,4 @@ export default function RegisterPage() {
     );
 }
 
-LoginPage.excludeMainLayout = true;
+RegisterPage.excludeMainLayout = true;

@@ -14,6 +14,6 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
         throw new ApiError(400, "Invalid credentials.");
     }
 
-    req.user = token;
+    req.user = JSON.parse(dbUser);
     next();
 });

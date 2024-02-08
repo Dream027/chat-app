@@ -33,7 +33,9 @@ const registerUser = asyncHandler(async (req, res) => {
             name: newUser.name,
             image: newUser.image,
             email: newUser.email,
-        })
+        }),
+        "EX",
+        60 * 60 * 24 * 2
     );
 
     return res
@@ -84,7 +86,9 @@ const loginUser = asyncHandler(async (req, res) => {
             name: user.name,
             image: user.image,
             email: user.email,
-        })
+        }),
+        "EX",
+        60 * 60 * 24 * 2
     );
 
     return res
@@ -109,11 +113,8 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const getSession = asyncHandler(async (req, res) => {
-    const rawUser = await redis.get(`session-${req.user}`);
-    const user = JSON.parse(rawUser!);
-
     res.status(200).json(
-        new ApiResponse(200, "User session fetched successfully.", user)
+        new ApiResponse(200, "User session fetched successfully.", req.user)
     );
 });
 
