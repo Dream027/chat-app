@@ -30,7 +30,10 @@ export default function Sidebar() {
         <div className={styles.main}>
             <div className={styles.session_container}>
                 <div>
-                    <div className={styles.session_image}>
+                    <div
+                        className={styles.session_image}
+                        onClick={() => router.push("/profile")}
+                    >
                         <Image src={session?.image!} alt={""} fill />
                     </div>
                     <div>

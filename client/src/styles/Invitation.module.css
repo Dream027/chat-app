@@ -1,0 +1,38 @@
+.send > div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 6rem 0 0 12rem;
+    max-width: 600px;
+    width: 90%;
+}
+
+.send button {
+    width: min-content;
+}
+
+.send h1 {
+    color: var(--clr-btn-primary-bg);
+}
+
+.result {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    border: 1px solid #ccc;
+    width: min-content;
+    padding: 1rem 3rem;
+    border-radius: 2rem;
+}
+
+.result_container {
+    margin-top: 4rem;
+    height: 14rem;
+    width: max(600px, 65%);
+    display: grid;
+    place-items: center;
+}
+
+.result img {
+    border-radius: 2rem;
+}

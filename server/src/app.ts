@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import userRoute from "./routes/user.route";
 import cors from "cors";
+import friendRoute from "./routes/friend.route";
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", userRoute);
+app.use("/api/friends", friendRoute);
 
 export { app };

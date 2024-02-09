@@ -30,7 +30,7 @@ const invitationSchema = new mongoose.Schema<Invitation>(
 );
 
 export interface InvitationDocument extends Invitation, mongoose.Document {}
-export default mongoose.model<InvitationDocument>(
+export const Invitation = mongoose.model<InvitationDocument>(
     "Invitation",
     invitationSchema
 );

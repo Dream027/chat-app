@@ -4,6 +4,8 @@ import { ApiResponse } from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 import { v4 as uuidv4 } from "uuid";
 import { redis } from "../db";
+import { Invitation } from "../modals/Invitation.modal";
+import mongoose from "mongoose";
 
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
@@ -133,4 +135,266 @@ const logoutUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, "User logged out successfully.", {}));
 });
 
-export { registerUser, loginUser, getSession, logoutUser };
+const inviteUser = asyncHandler(async (req, res) => {
+    const { friendId } = req.params;
+
+    if (friendId === req.user._id) {
+        throw new ApiError(400, "You cannot invite yourself");
+    }
+
+    const friend = (await User.findById(friendId)) as UserDocument;
+    if (!friend) {
+        throw new ApiError(404, "Friend not found");
+    }
+
+    const user = (await User.findById(req.user._id)) as UserDocument;
+
+    const dbInvitation = await Invitation.findOne({
+        sender: user._id,
+        receiver: friend._id,
+    });
+    if (dbInvitation) {
+        throw new ApiError(400, "Invitation already sent");
+    }
+
+    const invitation = await Invitation.create({
+        sender: user._id,
+        receiver: friend._id,
+    });
+
+    friend.invitations.push(invitation._id);
+    await friend.save();
+
+    user.invitations.push(invitation._id);
+    await user.save();
+
+    return res.status(200).json(
+        new ApiResponse(200, "Invitation sent successfully", {
+            _id: invitation._id,
+            sender: invitation.sender,
+            receiver: invitation.receiver,
+        })
+    );
+});
+
+const deleteInvitation = asyncHandler(async (req, res) => {
+    const { friendId } = req.params;
+
+    if (friendId === req.user._id) {
+        throw new ApiError(400, "You cannot delete your own invitation");
+    }
+
+    const friend = (await User.findById(friendId)) as UserDocument;
+    if (!friend) {
+        throw new ApiError(404, "Friend not found");
+    }
+
+    const invitation = await Invitation.findOne({
+        sender: req.user._id,
+        receiver: friend._id,
+    });
+    if (!invitation) {
+        throw new ApiError(404, "Invitation not found");
+    }
+
+    const user = (await User.findById(req.user._id)) as UserDocument;
+
+    user.invitations = user.invitations.filter(
+        (invitationId: any) =>
+            invitationId.toString() !== invitation._id.toString()
+    );
+    await user.save();
+
+    friend.invitations = friend.invitations.filter(
+        (invitationId: any) =>
+            invitationId.toString() !== invitation._id.toString()
+    );
+    await friend.save();
+
+    await Invitation.findByIdAndDelete(invitation._id);
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                "Invitation deleted successfully",
+                invitation._id
+            )
+        );
+});
+
+const acceptInvitation = asyncHandler(async (req, res) => {
+    const { friendId } = req.params;
+
+    if (friendId === req.user._id) {
+        throw new ApiError(400, "You cannot accept your own invitation");
+    }
+
+    const friend = (await User.findById(friendId)) as UserDocument;
+    if (!friend) {
+        throw new ApiError(404, "Friend not found");
+    }
+
+    const invitation = await Invitation.findOne({
+        sender: friend._id,
+        receiver: req.user._id,
+    });
+    if (!invitation) {
+        throw new ApiError(404, "Invitation not found");
+    }
+
+    const user = (await User.findById(req.user._id)) as UserDocument;
+
+    user.friends.push(friend._id);
+    user.invitations = user.invitations.filter(
+        (invitationId: any) =>
+            invitationId.toString() !== invitation._id.toString()
+    );
+    await user.save();
+
+    friend.friends.push(req.user._id as any);
+    friend.invitations = friend.invitations.filter(
+        (invitationId: any) =>
+            invitationId.toString() !== invitation._id.toString()
+    );
+    await friend.save();
+
+    await Invitation.findByIdAndDelete(invitation._id);
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                "Invitation accepted successfully",
+                invitation._id
+            )
+        );
+});
+
+const rejectInvitation = asyncHandler(async (req, res) => {
+    const { friendId } = req.params;
+
+    if (friendId === req.user._id) {
+        throw new ApiError(400, "You cannot reject your own invitation");
+    }
+
+    const friend = (await User.findById(friendId)) as UserDocument;
+    if (!friend) {
+        throw new ApiError(404, "Friend not found");
+    }
+
+    const invitation = await Invitation.findOne({
+        sender: friend._id,
+        receiver: req.user._id,
+    });
+    if (!invitation) {
+        throw new ApiError(404, "Invitation not found");
+    }
+
+    const user = (await User.findById(req.user._id)) as UserDocument;
+
+    user.invitations = user.invitations.filter(
+        (invitationId: any) =>
+            invitationId.toString() !== invitation._id.toString()
+    );
+    await user.save();
+
+    friend.invitations = friend.invitations.filter(
+        (invitationId: any) =>
+            invitationId.toString() !== invitation._id.toString()
+    );
+    await friend.save();
+
+    await Invitation.findByIdAndDelete(invitation._id);
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                "Invitation rejected successfully",
+                invitation._id
+            )
+        );
+});
+
+const getAllInvitations = asyncHandler(async (req, res) => {
+    const invitations = await Invitation.aggregate([
+        {
+            $lookup: {
+                from: "users",
+                localField: "sender",
+                foreignField: "_id",
+                as: "sender",
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            email: 1,
+                            image: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "receiver",
+                foreignField: "_id",
+                as: "receiver",
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            email: 1,
+                            image: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                sender: {
+                    $arrayElemAt: ["$sender", 0],
+                },
+                receiver: {
+                    $arrayElemAt: ["$receiver", 0],
+                },
+            },
+        },
+        {
+            $project: {
+                sender: 1,
+                receiver: 1,
+            },
+        },
+    ]);
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                "Invitations fetched successfully",
+                invitations
+            )
+        );
+});
+
+export {
+    registerUser,
+    loginUser,
+    getSession,
+    logoutUser,
+    inviteUser,
+    deleteInvitation,
+    acceptInvitation,
+    rejectInvitation,
+    getAllInvitations,
+};

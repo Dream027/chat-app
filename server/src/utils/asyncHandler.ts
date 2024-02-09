@@ -14,18 +14,14 @@ export function asyncHandler(
                     data: null,
                     message: error.message,
                     success: false,
-                });
-            } else if (error instanceof JsonWebTokenError) {
-                res.status(401).json({
-                    data: null,
-                    message: "Invalid token.",
-                    success: false,
+                    statusCode: error.statusCode,
                 });
             } else if (error instanceof Error) {
                 res.status(500).json({
                     data: null,
                     message: error.message,
                     success: false,
+                    statusCode: 500,
                 });
             }
         }

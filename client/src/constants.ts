@@ -1,5 +1,5 @@
 export const navbarOptions = [
     { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
-    { name: "Services", path: "/service" },
+    { name: "View Invitations", path: "/users/invitation" },
+    { name: "Send Invitation", path: "/friends/invite" },
 ];

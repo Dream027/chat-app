@@ -25,6 +25,7 @@
   height: 3.5rem;
   border-radius: 1rem;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .session_container > div > :nth-child(2) {

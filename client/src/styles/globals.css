@@ -15,12 +15,19 @@
     --clr-input-color: #888;
     --clr-input-focus: #53d9ff;
 
-    --clr-btn-primary-bg: #53d9ff;
+    --clr-btn-form-bg: #53d9ff;
+    --clr-btn-form-color: #fff;
+    --clr-btn-form-border: #53d9ff;
+    --clr-btn-form-disabled: #7adeff;
+    --clr-btn-form-hover-bg: #0bc9fe;
+    --clr-btn-form-hover-border: #0bc9fe;
+
+    --clr-btn-primary-bg: #222;
     --clr-btn-primary-color: #fff;
-    --clr-btn-primary-border: #53d9ff;
-    --clr-btn-primary-disabled-color: #7adeff;
-    --clr-btn-primary-hover-bg: #0bc9fe;
-    --clr-btn-primary-hover-border: #0bc9fe;
+    --clr-btn-primary-border: #222;
+    --clr-btn-primary-disabled: #444;
+    --clr-btn-primary-hover-bg: #666;
+    --clr-btn-primary-hover-border: #666;
 
     --clr-link-color: #53d9ff;
     --clr-link-hover-color: #0bc9fe;
@@ -61,6 +68,27 @@ form h1 {
     margin-bottom: 1rem;
 }
 
+button {
+    font-size: inherit;
+    color: var(--clr-btn-primary-color);
+    background-color: var(--clr-btn-primary-bg);
+    border: 1px solid var(--clr-btn-primary-border);
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    outline: none;
+    letter-spacing: 2px;
+    transition: 0.3s ease-in-out;
+}
+button:hover,
+button:focus {
+    background-color: var(--clr-btn-primary-hover-bg);
+    border-color: var(--clr-btn-primary-hover-border);
+}
+button:disabled {
+    background-color: var(--clr-btn-primary-disabled);
+}
+
 form button {
     font-size: inherit;
     padding: 0.5rem 1rem;
@@ -68,9 +96,9 @@ form button {
     margin-top: 1rem;
     outline: none;
     letter-spacing: 2px;
-    border: 1px solid var(--clr-btn-primary-border);
-    color: var(--clr-btn-primary-color);
-    background-color: var(--clr-btn-primary-bg);
+    border: 1px solid var(--clr-btn-form-border);
+    color: var(--clr-btn-form-color);
+    background-color: var(--clr-btn-form-bg);
     border-radius: 0.25rem;
     transition: 0.3s ease-in-out;
     display: inline-flex;
@@ -80,11 +108,11 @@ form button {
 }
 form button:hover,
 form button:focus {
-    background-color: var(--clr-btn-primary-hover-bg);
-    border-color: var(--clr-btn-primary-hover-border);
+    background-color: var(--clr-btn-form-hover-bg);
+    border-color: var(--clr-btn-form-hover-border);
 }
 form button:disabled {
-    background-color: var(--clr-btn-primary-disabled-color);
+    background-color: var(--clr-btn-form-disabled);
 }
 
 input {
@@ -98,6 +126,9 @@ input {
     background-color: transparent;
 }
 input:focus {
+    border-color: var(--clr-text-dark);
+}
+form input:focus {
     border-color: var(--clr-input-focus);
 }
 
@@ -106,8 +137,9 @@ label {
     margin-bottom: 0.5rem;
     font-weight: 600;
     letter-spacing: 1px;
+    color: var(--clr-text-dark);
 }
-label:has(+ input:focus) {
+form label:has(+ input:focus) {
     color: var(--clr-input-focus);
 }
 
