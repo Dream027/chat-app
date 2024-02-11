@@ -18,6 +18,11 @@ export function useSession() {
     return useContext<SessionContext | null>(SessionContext)?.session;
 }
 
+export function useSessionState() {
+    const context = useContext(SessionContext);
+    return [context?.session, context?.setSession] as const;
+}
+
 export default function SessionProvider({
     children,
 }: {

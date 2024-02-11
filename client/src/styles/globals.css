@@ -1,205 +1,224 @@
 :root {
-    --sidebar-width: 16rem;
-    --sidebar-header-height: 12rem;
-    --navbar-height: 4rem;
+  --sidebar-width: 16rem;
+  --sidebar-header-height: 12rem;
+  --navbar-height: 4rem;
 
-    --clr-text-light: #cccccc;
-    --clr-text-dark: #999;
-    --clr-text-heading: #777;
+  --clr-text-light: #666;
+  --clr-text-dark: #444;
+  --clr-text-heading: #222;
 
-    --clr-card-bg: #fff;
-    --clr-card-border: #ccc9;
-    --clr-shadow: #ccc8;
+  --clr-card-bg: #fff;
+  --clr-card-border: #ccc9;
+  --clr-shadow: #ccc8;
 
-    --clr-input-border: #ccc;
-    --clr-input-color: #888;
-    --clr-input-focus: #53d9ff;
+  --clr-input-border: #ccc;
+  --clr-input-color: #888;
+  --clr-input-focus: #53d9ff;
 
-    --clr-btn-form-bg: #53d9ff;
-    --clr-btn-form-color: #fff;
-    --clr-btn-form-border: #53d9ff;
-    --clr-btn-form-disabled: #7adeff;
-    --clr-btn-form-hover-bg: #0bc9fe;
-    --clr-btn-form-hover-border: #0bc9fe;
+  --clr-btn-form-bg: #53d9ff;
+  --clr-btn-form-color: #fff;
+  --clr-btn-form-border: #53d9ff;
+  --clr-btn-form-disabled: #7adeff;
+  --clr-btn-form-hover-bg: #0bc9fe;
+  --clr-btn-form-hover-border: #0bc9fe;
 
-    --clr-btn-primary-bg: #222;
-    --clr-btn-primary-color: #fff;
-    --clr-btn-primary-border: #222;
-    --clr-btn-primary-disabled: #444;
-    --clr-btn-primary-hover-bg: #666;
-    --clr-btn-primary-hover-border: #666;
+  --clr-btn-primary-bg: #222;
+  --clr-btn-primary-color: #fff;
+  --clr-btn-primary-border: #222;
+  --clr-btn-primary-disabled: #444;
+  --clr-btn-primary-hover-bg: #666;
+  --clr-btn-primary-hover-border: #666;
 
-    --clr-link-color: #53d9ff;
-    --clr-link-hover-color: #0bc9fe;
+  --clr-btn-secondary-bg: #eee;
+  --clr-btn-secondary-color: #222;
+  --clr-btn-secondary-border: #222;
+  --clr-btn-secondary-disabled: #444;
+  --clr-btn-secondary-hover-bg: #ddd;
+  --clr-btn-secondary-hover-border: #666;
+  --clr-btn-secondary-hover-color: #222;
 
-    font-size: 18px;
+  --clr-link-color: #53d9ff;
+  --clr-link-hover-color: #0bc9fe;
+
+  font-size: 18px;
 }
 
 * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 html,
 body {
-    max-width: 100vw;
-    max-height: 100vh;
-    overflow: hidden;
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--clr-text-heading)
 }
 
 a {
-    color: var(--clr-link-color);
-    text-decoration: none;
+  color: var(--clr-link-color);
+  text-decoration: none;
 }
 a:hover {
-    color: var(--clr-link-hover-color);
-}
-
-form {
-    display: grid;
-    gap: 1.5rem;
-    width: 100%;
-}
-
-form h1 {
-    text-align: center;
-    letter-spacing: 4px;
-    margin-bottom: 1rem;
+  color: var(--clr-link-hover-color);
 }
 
 button {
-    font-size: inherit;
-    color: var(--clr-btn-primary-color);
-    background-color: var(--clr-btn-primary-bg);
-    border: 1px solid var(--clr-btn-primary-border);
-    border-radius: 0.25rem;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    outline: none;
-    letter-spacing: 2px;
-    transition: 0.3s ease-in-out;
+  font-size: inherit;
+  font-weight: 600;
+  color: var(--clr-btn-primary-color);
+  background-color: var(--clr-btn-primary-bg);
+  border: 1px solid var(--clr-btn-primary-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  outline: none;
+  transition: 0.3s ease-in-out;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
 }
-button:hover,
-button:focus {
-    background-color: var(--clr-btn-primary-hover-bg);
-    border-color: var(--clr-btn-primary-hover-border);
+button:hover {
+  background-color: var(--clr-btn-primary-hover-bg);
+  border-color: var(--clr-btn-primary-hover-border);
 }
 button:disabled {
-    background-color: var(--clr-btn-primary-disabled);
+  background-color: var(--clr-btn-primary-disabled);
+}
+
+form {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+form h1 {
+  text-align: center;
+  letter-spacing: 4px;
+  margin-bottom: 1rem;
 }
 
 form button {
-    font-size: inherit;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    margin-top: 1rem;
-    outline: none;
-    letter-spacing: 2px;
-    border: 1px solid var(--clr-btn-form-border);
-    color: var(--clr-btn-form-color);
-    background-color: var(--clr-btn-form-bg);
-    border-radius: 0.25rem;
-    transition: 0.3s ease-in-out;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
+  margin-top: 1rem;
+  outline: none;
+  letter-spacing: 2px;
+  border: 1px solid var(--clr-btn-form-border);
+  color: var(--clr-btn-form-color);
+  background-color: var(--clr-btn-form-bg);
 }
 form button:hover,
 form button:focus {
-    background-color: var(--clr-btn-form-hover-bg);
-    border-color: var(--clr-btn-form-hover-border);
+  background-color: var(--clr-btn-form-hover-bg);
+  border-color: var(--clr-btn-form-hover-border);
 }
 form button:disabled {
-    background-color: var(--clr-btn-form-disabled);
+  background-color: var(--clr-btn-form-disabled);
 }
 
 input {
-    font-size: inherit;
-    width: 100%;
-    padding: 0.55rem 1rem;
-    outline: none;
-    border: 1px solid var(--clr-input-border);
-    border-radius: 0.25rem;
-    color: var(--clr-input-color);
-    background-color: transparent;
+  font-size: inherit;
+  width: 100%;
+  padding: 0.55rem 1rem;
+  outline: none;
+  border: 1px solid var(--clr-input-border);
+  border-radius: 0.25rem;
+  color: var(--clr-input-color);
+  background-color: transparent;
 }
 input:focus {
-    border-color: var(--clr-text-dark);
+  border-color: var(--clr-text-dark);
 }
 form input:focus {
-    border-color: var(--clr-input-focus);
+  border-color: var(--clr-input-focus);
 }
 
 label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    color: var(--clr-text-dark);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--clr-text-dark);
 }
 form label:has(+ input:focus) {
-    color: var(--clr-input-focus);
+  color: var(--clr-input-focus);
 }
 
 nav {
-    height: var(--navbar-height);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--clr-card-border);
-    padding: 0 5rem;
-    box-shadow: 0 0 6px #ccc6;
+  height: var(--navbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--clr-card-border);
+  padding: 0 5rem;
+  box-shadow: 0 0 6px #ccc6;
 }
 nav ul {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  list-style: none;
 }
 
 nav a {
-    color: var(--clr-text-light);
-    transition: 0.3s ease-in-out;
-    position: relative;
+  color: var(--clr-text-light);
+  transition: 0.3s ease-in-out;
+  position: relative;
 }
 nav a:hover,
 nav a.active-link {
-    color: var(--clr-link-hover-color);
+  color: var(--clr-link-hover-color);
 }
 nav a::after {
-    content: "";
-    position: absolute;
-    background-color: var(--clr-link-hover-color);
-    width: 0;
-    height: 2px;
-    border-radius: 4px;
-    bottom: -20%;
-    left: -10%;
-    transition: 0.3s ease-in-out;
+  content: "";
+  position: absolute;
+  background-color: var(--clr-link-hover-color);
+  width: 0;
+  height: 2px;
+  border-radius: 4px;
+  bottom: -20%;
+  left: -10%;
+  transition: 0.3s ease-in-out;
 }
 nav a:hover::after {
-    width: 120%;
+  width: 120%;
 }
 
 .sidebar {
-    display: grid;
-    grid-template-columns: var(--sidebar-width) 1fr;
-    height: calc(100svh - var(--navbar-height));
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  height: calc(100svh - var(--navbar-height));
 }
 
 .loader {
-    height: 20px;
-    color: inherit;
-    animation: rotate 2s infinite linear;
+  height: 20px;
+  color: inherit;
+  animation: rotate 2s infinite linear;
 }
 @keyframes rotate {
-    from {
-        rotate: 0deg;
-    }
-    to {
-        rotate: 359deg;
-    }
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 359deg;
+  }
+}
+
+.btn-secondary {
+  background-color: var(--clr-btn-secondary-bg);
+  border: none;
+  color: var(--clr-btn-secondary-color);
+}
+.btn-secondary:hover {
+  background-color: var(--clr-btn-secondary-hover-bg);
+  color: var(--clr-btn-secondary-hover-color);
+}
+.btn-secondary:disabled {
+  background-color: var(--clr-btn-secondary-disabled);
 }

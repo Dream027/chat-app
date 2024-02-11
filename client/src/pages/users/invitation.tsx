@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrowDown, ArrowUp, Loader } from "lucide-react";
 import { fetchClient } from "@/utils/fetchClient";
 import { useSession } from "@/contexts/SessionProvider";
+import toast from "react-hot-toast";
 
 type Invitation = {
     _id: string;
@@ -20,11 +21,65 @@ export default function ViewInvitationsPage() {
     const [loading, setLoading] = useState(true);
     const session = useSession();
 
-    async function acceptInvitation(id: string) {}
+    async function acceptInvitation(id: string) {
+        try {
+            const res = await fetchClient(
+                `/users/${id}/invitations/accept`,
+                "POST"
+            );
+            if (res.success) {
+                toast.success(res.message);
+                setReceivedInvitations((prev) =>
+                    prev.filter((inv) => inv._id !== res.data)
+                );
+            } else {
+                toast.error(res.message);
+            }
+            console.log(res);
+        } catch (err: any) {
+            console.error(err.message);
+            toast.error("Something went wrong");
+        }
+    }
 
-    async function rejectInvitation(id: string) {}
+    async function rejectInvitation(id: string) {
+        try {
+            const res = await fetchClient(
+                `/users/${id}/invitations/reject`,
+                "DELETE"
+            );
+            if (res.success) {
+                toast.success(res.message);
+                setReceivedInvitations((prev) =>
+                    prev.filter((inv) => inv._id !== res.data)
+                );
+            } else {
+                toast.error(res.message);
+            }
+            console.log(res);
+        } catch (err: any) {
+            console.error(err.message);
+            toast.error("Something went wrong");
+        }
+    }
 
-    async function deleteInvitation(id: string) {}
+    async function deleteInvitation(id: string) {
+        try {
+            const res = await fetchClient(`/users/${id}/invitations`, "DELETE");
+            if (res.success) {
+                toast.success(res.message);
+                setSentInvitations((prev) =>
+                    prev.filter((inv) => inv._id !== res.data)
+                );
+            } else {
+                toast.error(res.message);
+            }
+            console.log(res);
+        } catch (err: any) {
+            console.error(err.message);
+            toast.error("Something went wrong");
+        }
+    }
 
     useEffect(() => {
         (async () => {

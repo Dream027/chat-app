@@ -387,6 +387,76 @@ const getAllInvitations = asyncHandler(async (req, res) => {
         );
 });
 
+const searchFriends = asyncHandler(async (req, res) => {
+    const { email } = req.query;
+    if (!email) {
+        throw new ApiError(400, "Email is required");
+    }
+    if (email === req.user.email) {
+        throw new ApiError(400, "You cannot search yourself");
+    }
+
+    const user = (await User.findOne({ email })) as UserDocument;
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "User found successfully", {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            image: user.image,
+        })
+    );
+});
+
+const updateProfile = asyncHandler(async (req, res) => {
+    const body = req.body;
+    const validFields = ["name", "email"];
+
+    const keys = Object.keys(body);
+    if (keys.length === 0) {
+        throw new ApiError(400, "At least one field is required.");
+    }
+
+    keys.forEach((key) => {
+        if (!validFields.includes(key)) {
+            throw new ApiError(400, "Only valid fields are accepted");
+        }
+    });
+
+    await User.updateOne({ _id: req.user._id }, body);
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "User updated successfully", body));
+});
+
+const updatePassword = asyncHandler(async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+        throw new ApiError(400, "Both passwords are required.");
+    }
+    if (oldPassword === newPassword) {
+        throw new ApiError(400, "Both passwords cannot be same.");
+    }
+
+    const user = (await User.findById(req.user._id)) as UserDocument;
+
+    const matchPassword = await user.comparePassword(oldPassword);
+    if (!matchPassword) {
+        throw new ApiError(400, "Invalid password.");
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "Password updated successfully.", {}));
+});
+
 export {
     registerUser,
     loginUser,
@@ -397,4 +467,7 @@ export {
     acceptInvitation,
     rejectInvitation,
     getAllInvitations,
+    searchFriends,
+    updateProfile,
+    updatePassword,
 };

@@ -19,10 +19,16 @@
     display: flex;
     gap: 2rem;
     align-items: center;
-    border: 1px solid #ccc;
+    border: 1px solid #ccc8;
+    box-shadow: 5px 5px 10px #ccc6;
     width: min-content;
     padding: 1rem 3rem;
     border-radius: 2rem;
+    transition: background-color 0.3s ease-in-out;
+}
+.result:hover {
+    background-color: #eee4;
+    cursor: pointer;
 }
 
 .result_container {

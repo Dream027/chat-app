@@ -7,11 +7,9 @@
 }
 
 .main > div {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
   margin: 100px 0 0 150px;
-  background-color: #53d9ff22;
+  display: grid;
+  gap: 2rem;
 }
 
 .main h3 {
@@ -21,4 +19,26 @@
 }
 .main p {
   color: var(--clr-text-dark);
+}
+
+.session {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.session > div:first-child {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+.session > div:nth-child(3) {
+  width: 50%;
+  min-width: 600px;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.session > div:nth-child(3) > div:nth-child(3) {
+  display: flex;
+  gap: 1rem;
 }
