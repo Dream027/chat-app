@@ -8,6 +8,7 @@ declare module "express" {
             email: string;
             image: string;
         };
+        token: string;
     }
 }
 
@@ -19,5 +20,6 @@ declare module "express-serve-static-core" {
             email: string;
             image: string;
         };
+        token: string;
     }
 }

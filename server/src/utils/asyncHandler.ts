@@ -1,6 +1,5 @@
 import { NextFunction, RequestHandler, Request, Response } from "express";
-import { ApiError } from "../utils/ApiError";
-import { JsonWebTokenError } from "jsonwebtoken";
+import { ApiError } from "./ApiError";
 
 export function asyncHandler(
     handler: RequestHandler<any, any, any, any>

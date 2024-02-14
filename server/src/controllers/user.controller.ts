@@ -427,6 +427,16 @@ const updateProfile = asyncHandler(async (req, res) => {
     });
 
     await User.updateOne({ _id: req.user._id }, body);
+    req.user = {
+        ...req.user,
+        ...body,
+    };
+    await redis.set(
+        `session-${req.token}`,
+        JSON.stringify(req.user),
+        "EX",
+        60 * 60 * 24 * 2
+    );
 
     return res
         .status(200)
@@ -457,6 +467,27 @@ const updatePassword = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, "Password updated successfully.", {}));
 });
 
+const searchFriendById = asyncHandler(async (req, res) => {
+    const { id } = req.query;
+    if (!id) {
+        throw new ApiError(400, "Id is required");
+    }
+
+    const friend = (await User.findById(id)) as UserDocument;
+    if (!friend) {
+        throw new ApiError(404, "User not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "User found successfully", {
+            _id: friend._id,
+            name: friend.name,
+            email: friend.email,
+            image: friend.image,
+        })
+    );
+});
+
 export {
     registerUser,
     loginUser,
@@ -470,4 +501,5 @@ export {
     searchFriends,
     updateProfile,
     updatePassword,
+    searchFriendById,
 };

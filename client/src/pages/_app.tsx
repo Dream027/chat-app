@@ -7,6 +7,7 @@ import { NextComponentType } from "next";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 import SessionProvider from "@/contexts/SessionProvider";
+import SocketInitailiser from "@/components/SocketInitailiser";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default function App({ Component, pageProps }: ExtendedAppProps) {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+
             <main className={inter.className}>
                 <Toaster />
                 <SessionProvider>
@@ -38,6 +40,7 @@ export default function App({ Component, pageProps }: ExtendedAppProps) {
                         <Component {...pageProps} />
                     ) : (
                         <>
+                            <SocketInitailiser />
                             <Navbar />
                             <div className={"sidebar"}>
                                 <Sidebar />

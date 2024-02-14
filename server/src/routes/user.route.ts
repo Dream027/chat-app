@@ -10,6 +10,7 @@ import {
     logoutUser,
     registerUser,
     rejectInvitation,
+    searchFriendById,
     searchFriends,
     updatePassword,
     updateProfile,
@@ -19,6 +20,7 @@ const router = Router();
 
 router.route("/session").get(verifyToken, getSession);
 router.route("/friends/search").get(verifyToken, searchFriends);
+router.route("/friends").get(verifyToken, searchFriendById);
 
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);

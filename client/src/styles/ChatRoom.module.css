@@ -1,0 +1,74 @@
+.main {
+  --header-height: 6rem;
+  --input-height: 4rem;
+  --main-chat-clr: #fff;
+}
+
+.image_container {
+  position: relative;
+  width: 4rem;
+  height: 4rem;
+}
+
+.image_container img {
+  border-radius: 50%;
+}
+
+.header {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  border-bottom: 1px solid #ccc8;
+  box-shadow: 4px 0 8px #ccc4;
+}
+.header > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.input {
+  height: var(--input-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.input > div:first-child {
+  width: 50%;
+  min-width: 400px;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.chats {
+  height: calc(
+    100svh - var(--navbar-height) - var(--input-height) - var(--header-height)
+  );
+  overflow-y: auto;
+}
+
+.chats > div {
+  padding: 0.5rem;
+  border-radius: 10%;
+}
+
+.chats p {
+  width: fit-content;
+  max-width: 60%;
+  border-radius: 10px;
+  align-self: flex-start;
+  background-color: var(--clr-btn-secondary-bg);
+  padding: 0.75rem;
+  margin-left: 2rem;
+}
+
+.chats > div.sent_by_me p {
+  background-color: #53d9ff;
+  color: #fff;
+  margin-left: auto;
+  margin-right: 2rem;
+}

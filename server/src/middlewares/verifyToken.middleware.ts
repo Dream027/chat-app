@@ -15,5 +15,6 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
     }
 
     req.user = JSON.parse(dbUser);
+    req.token = token;
     next();
 });
