@@ -1,28 +1,112 @@
 .main {
     display: grid;
     place-items: center;
+    font-family: sans-serif;
     height: 100svh;
+
+    --transition: 800ms;
 }
 
 .card {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    gap: 2.5rem;
-    background-color: var(--clr-card-bg);
+    position: relative;
     border: 1px solid var(--clr-card-border);
-    border-radius: 1rem;
-    box-shadow: 10px 10px 20px var(--clr-shadow);
+    border-radius: 2rem;
+    box-shadow: 0 0 6px var(--clr-shadow);
     padding: 2rem;
     width: 90%;
-    max-width: 700px;
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 
-.card:not(:has(input[name="name"])) {
-    max-width: 600px;
-}
-
-.card > div:nth-child(3) {
+.card > :not(.float) {
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.card > :not(.float) > * {
+    width: 100%;
+}
+
+.float {
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    top: 0;
+    right: 0;
+    color: white;
+    background: linear-gradient(to right, var(--clr-primary-400), var(--clr-primary-500));
+    border-radius: 8rem 2rem 2rem 12rem;
+    display: grid;
+    place-items: center;
+    transform: translateX(0);
+    transition: var(--transition) ease-in-out;
+}
+.float h1 {
+    color: inherit;
+}
+
+.floating_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 80%;
+}
+
+.floating_container {
+    transition: var(--transition) ease-in-out;
+    text-align: center;
+}
+
+.floating_container:nth-child(2) {
+    visibility: hidden;
+    opacity: 0;
+}
+.card > :nth-child(2) {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+.floating_container > :nth-child(3) {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.active_login .float {
+    transform: translateX(-100%);
+    border-radius: 2rem 8rem 12rem 2rem;
+}
+
+.active_login .floating_container:nth-child(2) {
+    visibility: visible;
+    opacity: 1;
+}
+.active_login .floating_container:nth-child(1) {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.active_login.card > :nth-child(2) {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0);
+}
+.active_login.card > :nth-child(1) {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(100%);
+}
+.card > :first-child,
+.card > :nth-child(2) {
+    transition: transform var(--transition) ease-in-out,
+    opacity calc(var(--transition) * 2) ease-in-out;
 }

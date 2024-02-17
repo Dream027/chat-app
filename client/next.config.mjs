@@ -8,6 +8,20 @@ const nextConfig = {
         destination: "http://localhost:4000/api/:path*",
       },
     ];
+  },
+  redirects: () => {
+    return [
+      {
+        source: "/login",
+        destination: "/signin",
+        permanent: false,
+      },
+      {
+        source: "/register",
+        destination: "/signin",
+        permanent: false,
+      },
+    ];
   }
 };
 

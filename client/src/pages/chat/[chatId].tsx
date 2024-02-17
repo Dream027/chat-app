@@ -7,21 +7,28 @@ import { Send } from "lucide-react";
 import { useSession } from "@/contexts/SessionProvider";
 import { fetchClient } from "@/utils/fetchClient";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 export default function ChatRoomPage() {
     const router = useRouter();
     const [messages, setMessages] = useState<Message[]>([]);
-    const inputRef = useRef<HTMLInputElement>(null);
     const session = useSession();
     const [loading, setLoading] = useState(true);
     const [friend, setFriend] = useState<User | null>(null);
+    const [input, setInput] = useState("");
+    const chatsRef = useRef<HTMLDivElement>(null);
 
     function sendMessage() {
+        if (!socket.connected) {
+            toast.error("Socket is not connected");
+            return;
+        }
         socket.emit("chat-message", {
             sender: session?._id,
-            data: inputRef.current?.value,
+            data: input,
             receiver: friend?._id,
         });
+        setInput("");
     }
 
     useEffect(() => {
@@ -48,7 +55,6 @@ export default function ChatRoomPage() {
                     `/friends/chats?chatId=${chatId}`,
                     "GET"
                 );
-                console.log(friendsRes);
                 setMessages(friendsRes.data);
             } catch (e: any) {
                 console.error(e.message);
@@ -63,7 +69,7 @@ export default function ChatRoomPage() {
 
         function onmessage(message: Message) {
             setMessages((prev) => [...prev, message]);
-            console.log(message);
+            chatsRef.current?.scrollTo(0, chatsRef.current.scrollHeight);
         }
 
         socket.on("chat-message", onmessage);
@@ -88,7 +94,7 @@ export default function ChatRoomPage() {
                     </div>
                     <div></div>
                 </div>
-                <div className={styles.chats}>
+                <div className={styles.chats} ref={chatsRef}>
                     {messages.map((message, index) => (
                         <div
                             key={index}
@@ -105,9 +111,10 @@ export default function ChatRoomPage() {
                 <div className={styles.input}>
                     <div>
                         <input
-                            ref={inputRef}
                             type="text"
                             placeholder="Send a message"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
                         />
                         <button onClick={sendMessage}>
                             <Send />

@@ -20,7 +20,7 @@ export function useSession() {
 
 export function useSessionState() {
     const context = useContext(SessionContext);
-    return [context?.session, context?.setSession] as const;
+    return [context?.session!, context?.setSession!] as const;
 }
 
 export default function SessionProvider({

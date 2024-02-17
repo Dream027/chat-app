@@ -18,7 +18,13 @@ const io = new Server(server, {
         origin: (req, cb) => {
             cb(null, true);
         },
+        credentials: true,
     },
+});
+
+io.use((socket, next) => {
+    console.log(socket.handshake.headers.cookie);
+    next(new Error("Authentication error"));
 });
 
 io.on("connection", (socket) => {
