@@ -22,9 +22,26 @@ const io = new Server(server, {
     },
 });
 
-io.use((socket, next) => {
-    console.log(socket.handshake.headers.cookie);
-    next(new Error("Authentication error"));
+let users: { socketId: string; userId: string }[] = [];
+
+io.use(async (socket, next) => {
+    if (socket.handshake.headers.cookie?.split("=")[0] !== "token") {
+        next(new Error("Authentication error"));
+    }
+
+    const session = await redis.get(
+        `session-${socket.handshake.headers.cookie?.split("=")[1]}`
+    );
+    if (!session) {
+        next(new Error("Authentication error"));
+    } else {
+        const sessionData = JSON.parse(session);
+        users.push({
+            socketId: socket.id,
+            userId: sessionData._id,
+        });
+        next();
+    }
 });
 
 io.on("connection", (socket) => {
@@ -33,6 +50,15 @@ io.on("connection", (socket) => {
             `chat-${generateChatId(message.sender, message.receiver)}`,
             JSON.stringify(message)
         );
-        io.emit("chat-message", message);
+        if (users.find((user) => user.userId === message.receiver)) {
+            io.to(
+                users.find((user) => user.userId === message.receiver)!.socketId
+            ).emit("chat-message", message);
+        }
+        socket.emit("chat-message", message);
+    });
+
+    socket.on("disconnect", () => {
+        users = users.filter((user) => user.socketId !== socket.id);
     });
 });

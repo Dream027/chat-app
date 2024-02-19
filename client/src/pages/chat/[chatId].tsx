@@ -21,6 +21,7 @@ export default function ChatRoomPage() {
     function sendMessage() {
         if (!socket.connected) {
             toast.error("Socket is not connected");
+            socket.connect();
             return;
         }
         socket.emit("chat-message", {
@@ -30,6 +31,10 @@ export default function ChatRoomPage() {
         });
         setInput("");
     }
+
+    useEffect(() => {
+        chatsRef.current?.scrollTo(0, chatsRef.current.scrollHeight);
+    }, [messages]);
 
     useEffect(() => {
         (async () => {
@@ -69,7 +74,6 @@ export default function ChatRoomPage() {
 
         function onmessage(message: Message) {
             setMessages((prev) => [...prev, message]);
-            chatsRef.current?.scrollTo(0, chatsRef.current.scrollHeight);
         }
 
         socket.on("chat-message", onmessage);

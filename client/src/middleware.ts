@@ -7,7 +7,7 @@ export default async function middleware(req: NextRequest) {
             Authorization: `Bearer ${req.cookies.get("token")?.value}`,
         },
     });
-    if (!res.success) {
+    if (!res?.success) {
         return NextResponse.redirect(new URL("/login", req.nextUrl));
     }
 
@@ -21,5 +21,6 @@ export const config = {
         "/users/:path*",
         "/friends/:path*",
         "/chat/:path*",
+        "/group/:path*",
     ],
 };

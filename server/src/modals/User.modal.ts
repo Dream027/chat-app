@@ -10,6 +10,7 @@ interface User {
     blockedUsers: mongoose.Schema.Types.ObjectId[];
     invitations: mongoose.Schema.Types.ObjectId[];
     friends: mongoose.Schema.Types.ObjectId[];
+    groups: mongoose.Schema.Types.ObjectId[];
 }
 
 export interface UserDocument extends User, mongoose.Document {
@@ -63,6 +64,11 @@ const userSchema = new mongoose.Schema<UserDocument>(
         friends: {
             type: [mongoose.Schema.Types.ObjectId],
             ref: "User",
+            default: [],
+        },
+        groups: {
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: "Group",
             default: [],
         },
     },

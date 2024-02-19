@@ -1,0 +1,31 @@
+.main {
+
+}
+
+.main > div:first-child {
+  width: 80%;
+  min-width: 400px;
+  margin: 80px 0 0 100px;
+  display: grid;
+  gap: 2rem;
+}
+
+.main label {
+  display: block;
+  background: transparent;
+  margin-bottom: 0.75rem;
+}
+
+.main textarea {
+  outline: none;
+  background: transparent;
+  padding: 0.5rem;
+  font-size: inherit;
+  color: var(--clr-neutral-600);
+  width: 100%;
+  border: 1px solid var(--clr-neutral-400);
+}
+
+.main textarea:focus {
+  border-color: var(--clr-neutral-800);
+}

@@ -49,7 +49,9 @@ const LoginForm = forwardRef(function LoginForm(
             <h1>Login</h1>
             <div>
                 <div className={"input-container"}>
-                    <label htmlFor="login-email">Email</label>
+                    <label className={"label"} htmlFor="login-email">
+                        Email
+                    </label>
                     <input
                         type="text"
                         id="login-email"
@@ -69,7 +71,9 @@ const LoginForm = forwardRef(function LoginForm(
                     ) : null}
                 </div>
                 <div className={"input-container"}>
-                    <label htmlFor="login-password">Password</label>
+                    <label className={"label"} htmlFor="login-password">
+                        Password
+                    </label>
                     <input
                         type="password"
                         id="login-password"

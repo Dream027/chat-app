@@ -42,8 +42,6 @@ export default function ProfilePage() {
             );
             if (res.success) {
                 toast.success(res.message);
-
-                // Todo: fix this
                 setSession({ ...session, ...res.data });
             } else {
                 toast.error(res.message);

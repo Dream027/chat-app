@@ -1,5 +1,9 @@
 import { Loader, LogOut } from "lucide-react";
-import { SessionContext, useSession } from "@/contexts/SessionProvider";
+import {
+    SessionContext,
+    useSession,
+    useSessionState,
+} from "@/contexts/SessionProvider";
 import styles from "./styles/Sidebar.module.css";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
@@ -10,8 +14,7 @@ import Link from "next/link";
 import { generateChatId } from "@/utils/generateChatId";
 
 export default function Sidebar() {
-    const context = useContext(SessionContext);
-    const session = context?.session;
+    const [session, setSession] = useSessionState();
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [chats, setChats] = useState<User[]>([]);
@@ -35,6 +38,7 @@ export default function Sidebar() {
             if (res.success) {
                 toast.success(res.message);
                 router.replace("/login");
+                setSession(null);
             } else {
                 toast.error(res.message);
             }

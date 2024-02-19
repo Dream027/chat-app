@@ -269,19 +269,14 @@ form input:focus {
   border-color: var(--clr-primary-400);
 }
 label {
-  color: var(--clr-neutral-600);
-  position: absolute;
-  left: 1rem;
-  top: 1.25rem;
-  transform: translateY(-50%);
+  color: var(--clr-neutral-800);
   background-color: var(--clr-card-bg);
   transition: 0.3s ease-in-out;
   cursor: text;
-  padding: 0 0.5rem;
 }
 
-label:has(+ input:focus),
-label:has(+ input.toggle),
+.label:has(+ input:focus),
+.label:has(+ input.toggle),
 .input-container:has(.input-error) label {
   top: -2px;
 }
@@ -292,4 +287,11 @@ label:has(+ input.toggle),
 }
 .input-container:has(.input-error) input {
   border-color: var(--clr-input-error);
+}
+.label {
+  position: absolute;
+  left: 1rem;
+  top: 1.25rem;
+  transform: translateY(-50%);
+  padding: 0 0.5rem;
 }

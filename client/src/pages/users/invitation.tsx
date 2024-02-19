@@ -5,6 +5,7 @@ import { ArrowDown, ArrowUp, Loader } from "lucide-react";
 import { fetchClient } from "@/utils/fetchClient";
 import { useSession } from "@/contexts/SessionProvider";
 import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 type Invitation = {
     _id: string;
@@ -20,6 +21,7 @@ export default function ViewInvitationsPage() {
     >([]);
     const [loading, setLoading] = useState(true);
     const session = useSession();
+    const router = useRouter();
 
     async function acceptInvitation(id: string) {
         try {
@@ -32,6 +34,7 @@ export default function ViewInvitationsPage() {
                 setReceivedInvitations((prev) =>
                     prev.filter((inv) => inv._id !== res.data)
                 );
+                router.reload();
             } else {
                 toast.error(res.message);
             }

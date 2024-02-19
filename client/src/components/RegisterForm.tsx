@@ -38,7 +38,11 @@ const RegisterForm = forwardRef(function RegisterForm(
     async function onSubmit(data: FormFields) {
         try {
             console.log(data);
-            const res = await fetchClient("/users/register", "POST", data);
+            const res = await fetchClient("/users/register", "POST", {
+                name: `${data.firstName} ${data.secondName}`,
+                email: data.email,
+                password: data.password,
+            });
             if (res.success) {
                 toast.success(res.message);
                 router.replace("/");
@@ -58,7 +62,12 @@ const RegisterForm = forwardRef(function RegisterForm(
             <div>
                 <div className={"second-input"}>
                     <div className={"input-container"}>
-                        <label htmlFor="register-first-name">First Name</label>
+                        <label
+                            className={"label"}
+                            htmlFor="register-first-name"
+                        >
+                            First Name
+                        </label>
                         <input
                             type="text"
                             id="register-first-name"
@@ -78,7 +87,10 @@ const RegisterForm = forwardRef(function RegisterForm(
                         ) : null}
                     </div>
                     <div className={"input-container"}>
-                        <label htmlFor="register-second-name">
+                        <label
+                            className={"label"}
+                            htmlFor="register-second-name"
+                        >
                             Second Name
                         </label>
                         <input
@@ -101,7 +113,9 @@ const RegisterForm = forwardRef(function RegisterForm(
                     </div>
                 </div>
                 <div className={"input-container"}>
-                    <label htmlFor="register-email">Email</label>
+                    <label className={"label"} htmlFor="register-email">
+                        Email
+                    </label>
                     <input
                         type="text"
                         id="register-email"
@@ -121,7 +135,9 @@ const RegisterForm = forwardRef(function RegisterForm(
                     ) : null}
                 </div>
                 <div className={"input-container"}>
-                    <label htmlFor="register-password">Password</label>
+                    <label className={"label"} htmlFor="register-password">
+                        Password
+                    </label>
                     <input
                         type="password"
                         id="register-password"
