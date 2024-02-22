@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { v4 as uuidv4 } from "uuid";
 import { redis } from "../db";
 import { Invitation } from "../modals/Invitation.modal";
-import mongoose from "mongoose";
+import { generateFileLink } from "../utils/generateFileLink";
 
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
@@ -488,6 +488,39 @@ const searchFriendById = asyncHandler(async (req, res) => {
     );
 });
 
+const updateProfilePicture = asyncHandler(async (req, res) => {
+    const filename = req.file?.filename;
+    if (!filename) {
+        throw new ApiError(400, "Profile Picture is required");
+    }
+
+    const link = generateFileLink(filename);
+    const user = await User.findById(req.user._id);
+    if (!user) {
+        throw new ApiError(400, "Login first");
+    }
+
+    user.image = link;
+    await user.save();
+
+    const rawSession = await redis.get(`session-${req.token}`);
+    if (!rawSession) {
+        throw new ApiError(400, "Login first");
+    }
+
+    const session = JSON.parse(rawSession);
+    await redis.set(
+        `session-${req.token}`,
+        JSON.stringify({ ...session, image: link }),
+        "EX",
+        60 * 60 * 24 * 2
+    );
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "Profile Picture updated successfully", {}));
+});
+
 export {
     registerUser,
     loginUser,
@@ -502,4 +535,5 @@ export {
     updateProfile,
     updatePassword,
     searchFriendById,
+    updateProfilePicture,
 };

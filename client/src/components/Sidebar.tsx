@@ -17,7 +17,10 @@ export default function Sidebar() {
     const [session, setSession] = useSessionState();
     const router = useRouter();
     const [loading, setLoading] = useState(true);
-    const [chats, setChats] = useState<User[]>([]);
+    const [chats, setChats] = useState<{ friends: User[]; groups: Group[] }>({
+        friends: [],
+        groups: [],
+    });
 
     useEffect(() => {
         (async () => {
@@ -71,23 +74,50 @@ export default function Sidebar() {
 
             {/*Chats*/}
             <div>
+                <h3>Chats</h3>
                 {loading ? (
                     <Loader className={`loader ${styles.loader}`} />
-                ) : chats.length === 0 ? (
+                ) : chats.friends.length === 0 ? (
                     <div className={styles.placeholder}>
                         <h3>Add a friend to chatting</h3>
                         <Link href={"/friends/invite"}>Add Friend</Link>
                     </div>
                 ) : (
                     <>
-                        {chats.map((chat) => (
+                        {chats.friends.map((chat) => (
                             <div
                                 key={chat._id}
-                                className={`${styles.chat} ${router.pathname === `/chat/${generateChatId(session?._id!, chat._id)}`}`}
+                                className={`${styles.chat}`}
                                 onClick={() => {
                                     router.push(
                                         `/chat/${generateChatId(session?._id!, chat._id)}`
                                     );
+                                }}
+                            >
+                                <div>
+                                    <Image src={chat.image} alt={""} fill />
+                                </div>
+                                <h3>{chat.name}</h3>
+                            </div>
+                        ))}
+                    </>
+                )}
+                <h3>Groups</h3>
+                {loading ? (
+                    <Loader className={`loader ${styles.loader}`} />
+                ) : chats.groups.length === 0 ? (
+                    <div className={styles.placeholder}>
+                        <h3>Add a friend to chatting</h3>
+                        <Link href={"/friends/invite"}>Add Friend</Link>
+                    </div>
+                ) : (
+                    <>
+                        {chats.groups.map((chat) => (
+                            <div
+                                key={chat._id}
+                                className={`${styles.chat}`}
+                                onClick={() => {
+                                    router.push(`/group/${chat._id}/chat`);
                                 }}
                             >
                                 <div>

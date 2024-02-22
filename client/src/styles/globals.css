@@ -93,7 +93,6 @@ a:hover {
 
 button {
   font-size: inherit;
-  font-weight: 600;
   color: var(--clr-btn-primary-color);
   background-color: var(--clr-btn-primary-bg);
   border: 1px solid var(--clr-btn-primary-border);
@@ -294,4 +293,38 @@ label {
   top: 1.25rem;
   transform: translateY(-50%);
   padding: 0 0.5rem;
+}
+
+.alert-backdrop {
+  --delay: 600ms;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100svw;
+  height: 100svh;
+  background: hsl(0 0% 0% / 0.5);
+  visibility: hidden;
+  pointer-events: none;
+  transition: var(--delay) ease-in-out;
+  opacity: 0;
+}
+.alert-box {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--clr-card-bg);
+  border: 1px solid var(--clr-card-border);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 40px hsl(0 0% 0% / 0.5);
+  transition: var(--delay) ease-in-out;
+}
+.alert-backdrop.alert-active {
+  visibility: visible;
+  pointer-events: all;
+  opacity: 1;
+}
+.alert-backdrop.alert-active .alert-box {
+  top: 50%;
 }

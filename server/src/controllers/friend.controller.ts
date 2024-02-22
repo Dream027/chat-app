@@ -30,11 +30,33 @@ const getAllFriends = asyncHandler(async (req, res) => {
                 ],
             },
         },
+        {
+            $lookup: {
+                from: "groups",
+                localField: "groups",
+                foreignField: "_id",
+                as: "groups",
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            image: 1,
+                        },
+                    },
+                ],
+            },
+        },
     ]);
 
     return res
         .status(200)
-        .json(new ApiResponse(200, "All friends fetched", user[0].friends));
+        .json(
+            new ApiResponse(200, "All friends fetched", {
+                friends: user[0].friends,
+                groups: user[0].groups,
+            })
+        );
 });
 
 const getAllChats = asyncHandler(async (req, res) => {

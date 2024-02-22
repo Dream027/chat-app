@@ -14,7 +14,9 @@ import {
     searchFriends,
     updatePassword,
     updateProfile,
+    updateProfilePicture,
 } from "../controllers/user.controller";
+import { upload } from "../multer.config";
 
 const router = Router();
 
@@ -39,5 +41,8 @@ router
 
 router.route("/profile").put(verifyToken, updateProfile);
 router.route("/profile/password").put(verifyToken, updatePassword);
+router
+    .route("/profile/image")
+    .put(verifyToken, upload.single("profilePicture"), updateProfilePicture);
 
 export default router;
