@@ -11,7 +11,9 @@ import { Send } from "lucide-react";
 
 export default function GroupChatPage() {
     const router = useRouter();
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState<
+        { sender: string; data: string; id: string }[]
+    >([]);
     const session = useSession();
     const [loading, setLoading] = useState(true);
     const [group, setGroup] = useState<Group | null>(null);
@@ -27,6 +29,7 @@ export default function GroupChatPage() {
         socket.emit("group-message", {
             id: router.query.groupId,
             data: input,
+            sender: session?._id,
         });
         setInput("");
     }
@@ -41,7 +44,7 @@ export default function GroupChatPage() {
                 const groupId = router.query.groupId as string;
                 if (!groupId) return;
 
-                const res = await fetchClient(`/group?id=${groupId}`, "GET");
+                const res = await fetchClient(`/groups?id=${groupId}`, "GET");
                 if (res.success) {
                     setGroup(res.data);
                 } else {
@@ -64,7 +67,11 @@ export default function GroupChatPage() {
     useEffect(() => {
         if (loading) return;
 
-        function onmessage(message: Message) {
+        function onmessage(message: {
+            sender: string;
+            data: string;
+            id: string;
+        }) {
             setMessages((prev) => [...prev, message]);
         }
 

@@ -516,9 +516,11 @@ const updateProfilePicture = asyncHandler(async (req, res) => {
         60 * 60 * 24 * 2
     );
 
-    return res
-        .status(200)
-        .json(new ApiResponse(200, "Profile Picture updated successfully", {}));
+    return res.status(200).json(
+        new ApiResponse(200, "Profile Picture updated successfully", {
+            image: link,
+        })
+    );
 });
 
 export {

@@ -19,6 +19,7 @@ export default function CreateGroupPage() {
             if (res.success) {
                 toast.success(res.message);
                 router.push(`/group/${res.data._id}`);
+                router.reload();
             } else {
                 toast.error(res.message);
             }

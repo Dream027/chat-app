@@ -4,11 +4,13 @@ import toast from "react-hot-toast";
 import styles from "@/styles/Invitation.module.css";
 import { Loader } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function GroupJoinPage() {
     const inputRef = useRef<HTMLInputElement>(null);
     const [loading, setLoading] = useState(0);
     const [data, setData] = useState<Group | null>(null);
+    const router = useRouter();
 
     async function search() {
         setLoading(1);
@@ -38,6 +40,7 @@ export default function GroupJoinPage() {
             if (res.success) {
                 toast.success(res.message);
                 setLoading(0);
+                router.reload();
             } else {
                 toast.error(res.message);
             }

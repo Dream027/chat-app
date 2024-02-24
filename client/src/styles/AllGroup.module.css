@@ -1,0 +1,32 @@
+.main {
+    margin: 4rem 0 0 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 60%;
+    min-width: 300px;
+}
+
+.group {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.main img {
+    border-radius: 0.5rem;
+}
+
+.group > :nth-child(2) {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+.group:hover {
+    background-color: #ccc4;
+}

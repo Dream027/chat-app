@@ -19,6 +19,13 @@ export default function ProfilePage() {
     async function updateProfile() {
         if (!setSession || !session) return;
         try {
+            if (
+                nameRef.current?.value === "" &&
+                emailRef.current?.value === ""
+            ) {
+                throw new Error("All values are empty");
+            }
+
             const body = new Map();
             if (
                 emailRef.current?.value !== session?.email &&
@@ -31,13 +38,6 @@ export default function ProfilePage() {
                 nameRef.current?.value !== ""
             ) {
                 body.set("name", nameRef.current?.value);
-            }
-
-            if (
-                nameRef.current?.value === "" &&
-                emailRef.current?.value === ""
-            ) {
-                throw new Error("All values are empty");
             }
 
             const res = await fetchClient(
@@ -91,6 +91,7 @@ export default function ProfilePage() {
             if (res.success) {
                 toast.success(res.message);
                 setShowChangePasswordDialog(false);
+                setSession({ ...session, image: res.data.image });
             } else {
                 toast.error(res.message);
             }
@@ -195,7 +196,6 @@ export default function ProfilePage() {
                     <div>
                         <input
                             type="file"
-                            placeholder="New Password"
                             id="profilePicture"
                             name="profilePicture"
                         />

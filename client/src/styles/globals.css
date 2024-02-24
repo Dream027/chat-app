@@ -219,6 +219,7 @@ nav a:hover::after {
   border: 1px solid white;
   color: white;
 }
+
 .btn-outlined:hover {
   color: var(--clr-primary-400);
   background-color: white;
@@ -232,10 +233,12 @@ form {
   flex-direction: column;
   gap: 2rem;
 }
+
 form h1 {
   letter-spacing: 6px;
 }
-form > :nth-child(2) {
+
+form> :nth-child(2) {
   width: 100%;
   display: grid;
   gap: 1rem;
@@ -245,7 +248,8 @@ form .second-input {
   display: flex;
   gap: 1rem;
 }
-form .second-input > * {
+
+form .second-input>* {
   width: 100%;
 }
 
@@ -253,9 +257,11 @@ form button {
   background-color: var(--clr-primary-500);
   border: none;
 }
+
 form button:hover {
   background-color: var(--clr-primary-400);
 }
+
 form button:disabled {
   background-color: var(--clr-primary-300);
 }
@@ -264,9 +270,11 @@ form button:disabled {
   position: relative;
   height: 4rem;
 }
+
 form input:focus {
   border-color: var(--clr-primary-400);
 }
+
 label {
   color: var(--clr-neutral-800);
   background-color: var(--clr-card-bg);
@@ -279,18 +287,21 @@ label {
 .input-container:has(.input-error) label {
   top: -2px;
 }
+
 .input-error {
   color: var(--clr-input-error);
   margin-top: 0.5rem;
   margin-left: 1rem;
 }
+
 .input-container:has(.input-error) input {
   border-color: var(--clr-input-error);
 }
+
 .label {
   position: absolute;
-  left: 1rem;
-  top: 1.25rem;
+  left: 0.5rem;
+  top: 1.15rem;
   transform: translateY(-50%);
   padding: 0 0.5rem;
 }
@@ -308,6 +319,7 @@ label {
   transition: var(--delay) ease-in-out;
   opacity: 0;
 }
+
 .alert-box {
   position: absolute;
   top: 0;
@@ -320,11 +332,13 @@ label {
   box-shadow: 0 0 40px hsl(0 0% 0% / 0.5);
   transition: var(--delay) ease-in-out;
 }
+
 .alert-backdrop.alert-active {
   visibility: visible;
   pointer-events: all;
   opacity: 1;
 }
+
 .alert-backdrop.alert-active .alert-box {
   top: 50%;
 }

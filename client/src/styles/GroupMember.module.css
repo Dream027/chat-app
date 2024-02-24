@@ -1,0 +1,40 @@
+.main {
+    margin: 4rem 0 0 6rem;
+    width: 60%;
+    min-width: 400px;
+    overflow-y: auto;
+}
+
+.header {
+    background-color: white;
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    box-shadow: 0 0 10px #ccc;
+    margin-bottom: 2rem;
+    border: 1px solid var(--clr-card-border);
+    border-radius: 0.5rem;
+}
+.header img {
+    border-radius: 50%;
+}
+.user img {
+    border-radius: 1rem;
+}
+
+.user > :first-child {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+.user p {
+    margin-top: 0.25rem;
+}
+.user {
+    display: grid;
+    gap: 1.5rem;
+}

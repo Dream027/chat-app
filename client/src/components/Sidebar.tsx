@@ -40,7 +40,7 @@ export default function Sidebar() {
             const res = await fetchClient("/users/logout", "POST");
             if (res.success) {
                 toast.success(res.message);
-                router.replace("/login");
+                router.replace("/signin");
                 setSession(null);
             } else {
                 toast.error(res.message);
@@ -90,7 +90,10 @@ export default function Sidebar() {
                                 className={`${styles.chat}`}
                                 onClick={() => {
                                     router.push(
-                                        `/chat/${generateChatId(session?._id!, chat._id)}`
+                                        `/chat/${generateChatId(
+                                            session?._id!,
+                                            chat._id
+                                        )}`
                                     );
                                 }}
                             >
@@ -102,15 +105,10 @@ export default function Sidebar() {
                         ))}
                     </>
                 )}
-                <h3>Groups</h3>
+                {chats.groups.length > 0 && <h3>Groups</h3>}
                 {loading ? (
                     <Loader className={`loader ${styles.loader}`} />
-                ) : chats.groups.length === 0 ? (
-                    <div className={styles.placeholder}>
-                        <h3>Add a friend to chatting</h3>
-                        <Link href={"/friends/invite"}>Add Friend</Link>
-                    </div>
-                ) : (
+                ) : chats.groups.length === 0 ? null : (
                     <>
                         {chats.groups.map((chat) => (
                             <div

@@ -58,6 +58,20 @@ io.on("connection", (socket) => {
         socket.emit("chat-message", message);
     });
 
+    socket.on("group-message", async (message: any) => {
+        const key = `groupJoined-${message.id}`;
+        const members = await redis.lrange(key, 0, -1);
+
+        await redis.lpush(`groupChat-${message.id}`, message);
+        members.forEach((member) => {
+            if (users.find((user) => user.userId === member)) {
+                io.to(
+                    users.find((user) => user.userId === member)!.socketId
+                ).emit("group-message", message);
+            }
+        });
+    });
+
     socket.on("disconnect", () => {
         users = users.filter((user) => user.socketId !== socket.id);
     });

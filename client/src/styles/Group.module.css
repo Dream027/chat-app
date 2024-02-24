@@ -1,0 +1,61 @@
+.main {
+    margin: 4rem 0 0 6rem;
+    width: 60%;
+    min-width: 300px;
+}
+
+.main img {
+    border-radius: 2rem;
+}
+
+.main > div:first-child {
+    display: grid;
+    gap: 4rem;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.header > :nth-child(3) {
+    display: flex;
+    gap: 1rem;
+}
+
+.info {
+    display: grid;
+    gap: 1rem;
+}
+.info p {
+    line-height: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.members_section {
+    display: grid;
+    gap: 1.5rem;
+}
+.members_section > div {
+    display: grid;
+    gap: 1rem;
+}
+
+.member {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-radius: 2rem;
+    width: 75%;
+    min-width: 200px;
+    cursor: pointer;
+}
+.member:hover {
+    background-color: #ccc4;
+}
+.member > :first-child {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}

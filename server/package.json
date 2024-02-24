@@ -7,7 +7,8 @@
     "dev": "nodemon",
     "dev:start": "ts-node --files src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "serve": "serve uploads --listen 8000"
   },
   "keywords": [],
   "author": "",
