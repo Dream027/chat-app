@@ -7,6 +7,7 @@ declare module "express" {
             name: string;
             email: string;
             image: string;
+            password: string;
         };
         token: string;
     }
@@ -19,6 +20,7 @@ declare module "express-serve-static-core" {
             name: string;
             email: string;
             image: string;
+            password: string;
         };
         token: string;
     }

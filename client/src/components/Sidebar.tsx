@@ -1,12 +1,8 @@
 import { Loader, LogOut } from "lucide-react";
-import {
-    SessionContext,
-    useSession,
-    useSessionState,
-} from "@/contexts/SessionProvider";
+import { useSessionState } from "@/contexts/SessionProvider";
 import styles from "./styles/Sidebar.module.css";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { fetchClient } from "@/utils/fetchClient";
 import toast from "react-hot-toast";
@@ -24,9 +20,12 @@ export default function Sidebar() {
 
     useEffect(() => {
         (async () => {
+            console.log(session);
             try {
                 const res = await fetchClient("/friends", "GET");
-                setChats(res.data);
+                if (res.success) {
+                    setChats(res.data);
+                }
             } catch (e: any) {
                 console.error(e.message);
             } finally {

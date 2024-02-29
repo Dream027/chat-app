@@ -16,9 +16,17 @@ export function asyncHandler(
                     statusCode: error.statusCode,
                 });
             } else if (error instanceof Error) {
+                console.log(error);
                 res.status(500).json({
                     data: null,
                     message: error.message,
+                    success: false,
+                    statusCode: 500,
+                });
+            } else {
+                res.status(500).json({
+                    data: null,
+                    message: "Something went wrong",
                     success: false,
                     statusCode: 500,
                 });

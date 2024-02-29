@@ -4,7 +4,7 @@ import { redis } from "../db";
 
 export const verifyToken = asyncHandler(async (req, res, next) => {
     const token =
-        req.cookies.token || req.headers.authorization?.replace("Bearer ", "");
+        req.cookies?.token || req.headers.authorization?.replace("Bearer ", "");
     if (!token) {
         throw new ApiError(400, "Please login first.");
     }

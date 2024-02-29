@@ -1,0 +1,43 @@
+.main {
+    width: 100svw;
+    height: 100svh;
+}
+
+.container {
+    margin: 100px 0 0 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-direction: column;
+}
+
+.body {
+    width: 60%;
+    min-width: 400px;
+}
+
+.body form {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.body label {
+    background-color: transparent;
+    margin-bottom: 0;
+}
+
+.body form > :last-child {
+    display: flex;
+    gap: 1rem;
+}
+
+.header img {
+    border-radius: 2rem;
+    padding: 1rem;
+}

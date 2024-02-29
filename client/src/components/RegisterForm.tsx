@@ -57,7 +57,12 @@ const RegisterForm = forwardRef(function RegisterForm(
     }
 
     return (
-        <form {...props} ref={ref} onSubmit={handleSubmit(onSubmit)}>
+        <form
+            {...props}
+            ref={ref}
+            onSubmit={handleSubmit(onSubmit)}
+            className="form"
+        >
             <h1>Register</h1>
             <div>
                 <div className={"second-input"}>

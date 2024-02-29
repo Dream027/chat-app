@@ -5,8 +5,10 @@ import {
     deleteInvitation,
     getAllInvitations,
     getSession,
+    googleCallback,
     inviteUser,
     loginUser,
+    loginWithGoogle,
     logoutUser,
     registerUser,
     rejectInvitation,
@@ -14,6 +16,7 @@ import {
     searchFriends,
     updatePassword,
     updateProfile,
+    createAccountWithGoogle,
     updateProfilePicture,
 } from "../controllers/user.controller";
 import { upload } from "../multer.config";
@@ -44,5 +47,9 @@ router.route("/profile/password").put(verifyToken, updatePassword);
 router
     .route("/profile/image")
     .put(verifyToken, upload.single("profilePicture"), updateProfilePicture);
+
+router.route("/login/google").get(loginWithGoogle);
+router.route("/callback/google").get(googleCallback);
+router.route("/login/google/create").post(createAccountWithGoogle);
 
 export default router;

@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { fetchClient } from "@/utils/fetchClient";
 import { useRouter } from "next/router";
 import { useSessionState } from "@/contexts/SessionProvider";
+import { GoogleLogin } from "@react-oauth/google";
 
 const schema = z.object({
     email: z.string().email("Email must be valid"),
@@ -44,8 +45,17 @@ const LoginForm = forwardRef(function LoginForm(
         }
     }
 
+    async function loginWithGoogle() {
+        window.open("http://localhost:4000/api/users/callback/google", "_self");
+    }
+
     return (
-        <form {...props} ref={ref} onSubmit={handleSubmit(onSubmit)}>
+        <form
+            {...props}
+            ref={ref}
+            onSubmit={handleSubmit(onSubmit)}
+            className="form"
+        >
             <h1>Login</h1>
             <div>
                 <div className={"input-container"}>
@@ -94,6 +104,17 @@ const LoginForm = forwardRef(function LoginForm(
                 </div>
                 <button disabled={isSubmitting}>
                     {isSubmitting && <Loader2 className={"loader"} />} Login
+                </button>
+            </div>
+
+            <div>
+                <div></div>
+                <div>or</div>
+                <div></div>
+            </div>
+            <div>
+                <button type="button" onClick={loginWithGoogle}>
+                    Login with google
                 </button>
             </div>
         </form>

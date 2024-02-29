@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+    client-app:
+        build:
+            context: ./client
+            dockerfile: Dockerfile
+        ports:
+            - 3000:3000
+        container_name: client
+        networks:
+            - chat-app-network
+        volumes:
+            - ./client:/app
+        depends_on:
+            - server-app
+
+    server-app:
+        build:
+            context: ./server
+            dockerfile: Dockerfile
+        ports:
+            - 4000:4000
+        container_name: server
+        networks:
+            - chat-app-network
+        volumes:
+            - ./server:/app
+        depends_on:
+            - mongo
+            - redis
+
+    mongo:
+        image: mongo
+        container_name: mongo
+        ports:
+            - 27017:27018
+        volumes:
+            - mongoData:/data/db
+        networks:
+            - chat-app-network
+
+    redis:
+        image: redis
+        container_name: redis
+        ports:
+            - 6379:6379
+        networks:
+            - chat-app-network
+
+networks:
+    chat-app-network:
+
+volumes:
+    mongoData:

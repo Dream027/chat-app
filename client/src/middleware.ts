@@ -8,7 +8,7 @@ export default async function middleware(req: NextRequest) {
         },
     });
     if (!res?.success) {
-        return NextResponse.redirect(new URL("/login", req.nextUrl));
+        return NextResponse.redirect(new URL("/signin", req.nextUrl));
     }
 
     return NextResponse.next();

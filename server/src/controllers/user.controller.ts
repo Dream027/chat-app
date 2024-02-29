@@ -6,6 +6,9 @@ import { v4 as uuidv4 } from "uuid";
 import { redis } from "../db";
 import { Invitation } from "../modals/Invitation.modal";
 import { generateFileLink } from "../utils/generateFileLink";
+import { google } from "googleapis";
+import * as people from "googleapis/build/src/apis/people";
+import z from "zod";
 
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
@@ -523,6 +526,168 @@ const updateProfilePicture = asyncHandler(async (req, res) => {
     );
 });
 
+const loginWithGoogle = asyncHandler(async (req, res) => {
+    if (!req.query.code) {
+        throw new ApiError(400, "Failed to login");
+    }
+
+    const client = new google.auth.OAuth2({
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        redirectUri: "http://localhost:4000/api/users/login/google",
+    });
+
+    const token = await client.getToken(req.query.code);
+    const accessToken = token.tokens.access_token;
+    if (!accessToken) {
+        throw new ApiError(400, "Failed to login");
+    }
+    client.setCredentials(token.tokens);
+
+    const peopleService = people.people({ version: "v1", auth: client });
+    const response = await peopleService.people.get({
+        access_token: accessToken,
+        auth: client,
+        resourceName: "people/me",
+        personFields: "names,emailAddresses,photos",
+    });
+
+    const user = {
+        name: response.data.names![0].displayName,
+        email: response.data.emailAddresses![0].value,
+        image: response.data.photos![0].url,
+    };
+
+    const userSchema = z.object({
+        name: z.string(),
+        email: z.string(),
+        image: z.string(),
+    });
+    const parsedUser = userSchema.safeParse(user);
+
+    if (!parsedUser.success) {
+        throw new ApiError(400, "Failed to login");
+    }
+
+    const existingUser = (await User.findOne({
+        email: parsedUser.data.email,
+    })) as UserDocument;
+
+    if (!existingUser) {
+        const url = new URL("http://localhost:3000/signin/google");
+        url.searchParams.append("email", parsedUser.data.email);
+        url.searchParams.append("name", parsedUser.data.name);
+        url.searchParams.append("image", parsedUser.data.image);
+
+        return res.redirect(url.toString());
+    } else {
+        const token = uuidv4().replaceAll("-", "");
+        await redis.set(
+            `session-${token}`,
+            JSON.stringify({
+                _id: existingUser._id,
+                name: existingUser.name,
+                image: existingUser.image,
+                email: existingUser.email,
+            }),
+            "EX",
+            60 * 60 * 24 * 2
+        );
+
+        return res
+            .cookie("token", token, {
+                httpOnly: true,
+                sameSite: "none",
+                secure: true,
+                maxAge: 1000 * 60 * 60 * 24 * 2,
+            })
+            .redirect("http://localhost:3000");
+    }
+});
+
+const googleCallback = asyncHandler(async (req, res) => {
+    const oauth2Client = new google.auth.OAuth2({
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        redirectUri: "http://localhost:4000/api/users/login/google",
+    });
+
+    const scopes = [
+        "https://www.googleapis.com/auth/plus.login",
+        "https://www.googleapis.com/auth/plus.me",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+    ];
+    const authUrl = oauth2Client.generateAuthUrl({
+        access_type: "offline",
+        scope: scopes,
+        include_granted_scopes: true,
+    });
+
+    res.writeHead(302, {
+        Location: authUrl,
+    }).end();
+});
+
+const createAccountWithGoogle = asyncHandler(async (req, res) => {
+    const { email, name, image } = req.query;
+    if (!email || !name || !image) {
+        throw new ApiError(400, "Failed to create account");
+    }
+
+    const { password } = req.body;
+    if (!password) {
+        throw new ApiError(400, "Password is required");
+    }
+
+    const userSchema = z.object({
+        name: z.string(),
+        email: z.string().email("Invalid email"),
+        image: z.string().refine((val) => {
+            return val.startsWith("https://") || val.startsWith("http://");
+        }),
+        password: z.string().min(6, "Password must be at least 6 characters"),
+    });
+    const parsedUser = userSchema.parse({ name, email, image, password });
+
+    const existingUser = (await User.findOne({
+        email: parsedUser.email,
+    })) as UserDocument;
+    if (existingUser) {
+        throw new ApiError(400, "Email already exists");
+    }
+
+    const newUser = await User.create(parsedUser);
+    const token = uuidv4().replaceAll("-", "");
+    await redis.set(
+        `session-${token}`,
+        JSON.stringify({
+            _id: newUser._id,
+            name: newUser.name,
+            image: newUser.image,
+            email: newUser.email,
+        }),
+        "EX",
+        60 * 60 * 24 * 2
+    );
+
+    return res
+        .cookie("token", token, {
+            httpOnly: true,
+            sameSite: "none",
+            secure: true,
+            maxAge: 1000 * 60 * 60 * 24 * 2,
+        })
+        .json(
+            new ApiResponse(200, "Account created successfully", {
+                _id: newUser._id,
+                name: newUser.name,
+                image: newUser.image,
+                email: newUser.email,
+            })
+        );
+});
+
 export {
     registerUser,
     loginUser,
@@ -538,4 +703,7 @@ export {
     updatePassword,
     searchFriendById,
     updateProfilePicture,
+    loginWithGoogle,
+    googleCallback,
+    createAccountWithGoogle,
 };

@@ -1,8 +1,7 @@
 import { createServer } from "http";
 import { app } from "./app";
-import "dotenv/config";
 import { connectToDb, redis } from "./db";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { generateChatId } from "./utils/generateChatId";
 
 const server = createServer(app);
@@ -44,8 +43,8 @@ io.use(async (socket, next) => {
     }
 });
 
-io.on("connection", (socket) => {
-    socket.on("chat-message", async (message) => {
+io.on("connection", (socket: Socket) => {
+    socket.on("chat-message", async (message: any) => {
         await redis.rpush(
             `chat-${generateChatId(message.sender, message.receiver)}`,
             JSON.stringify(message)
