@@ -24,6 +24,10 @@ export default function ChatRoomPage() {
             socket.connect();
             return;
         }
+        if (!input) {
+            toast.error("Please enter a message");
+            return;
+        }
         socket.emit("chat-message", {
             sender: session?._id,
             data: input,

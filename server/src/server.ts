@@ -44,6 +44,11 @@ io.use(async (socket, next) => {
 });
 
 io.on("connection", (socket: Socket) => {
+    socket.on("me", () => {
+        const user = users.find((user) => user.socketId === socket.id);
+        socket.emit("me", user);
+    });
+
     socket.on("chat-message", async (message: any) => {
         await redis.rpush(
             `chat-${generateChatId(message.sender, message.receiver)}`,
