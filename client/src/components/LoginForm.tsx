@@ -8,6 +8,7 @@ import { fetchClient } from "@/utils/fetchClient";
 import { useRouter } from "next/router";
 import { useSessionState } from "@/contexts/SessionProvider";
 import { GoogleLogin } from "@react-oauth/google";
+import Image from "next/image";
 
 const schema = z.object({
     email: z.string().email("Email must be valid"),
@@ -107,13 +108,23 @@ const LoginForm = forwardRef(function LoginForm(
                 </button>
             </div>
 
-            <div>
+            <div className="divider">
                 <div></div>
                 <div>or</div>
                 <div></div>
             </div>
             <div>
-                <button type="button" onClick={loginWithGoogle}>
+                <button
+                    type="button"
+                    onClick={loginWithGoogle}
+                    className="auth-button"
+                >
+                    <Image
+                        src="/google.svg"
+                        alt="Google logo"
+                        width={20}
+                        height={20}
+                    />
                     Login with google
                 </button>
             </div>

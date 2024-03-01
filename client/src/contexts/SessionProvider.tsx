@@ -22,7 +22,8 @@ export function useSession() {
 
 export function useSessionState() {
     const context = useContext(SessionContext);
-    if (!context) throw new Error("Session is null");
+    if (!context?.session || !context?.setSession)
+        throw new Error("Session is null");
     return [context.session, context.setSession] as const;
 }
 

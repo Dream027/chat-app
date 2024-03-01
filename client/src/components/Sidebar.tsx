@@ -20,7 +20,6 @@ export default function Sidebar() {
 
     useEffect(() => {
         (async () => {
-            console.log(session);
             try {
                 const res = await fetchClient("/friends", "GET");
                 if (res.success) {
@@ -105,9 +104,7 @@ export default function Sidebar() {
                     </>
                 )}
                 {chats.groups.length > 0 && <h3>Groups</h3>}
-                {loading ? (
-                    <Loader className={`loader ${styles.loader}`} />
-                ) : chats.groups.length === 0 ? null : (
+                {loading ? null : chats.groups.length === 0 ? null : (
                     <>
                         {chats.groups.map((chat) => (
                             <div

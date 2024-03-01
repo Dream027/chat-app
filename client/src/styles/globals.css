@@ -277,6 +277,27 @@ form > :nth-child(2) {
 .form input:focus {
     border-color: var(--clr-primary-400);
 }
+.form .auth-button {
+    background-color: var(--clr-card-bg);
+    color: var(--clr-neutral-800);
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+}
+.form .auth-button:hover {
+    background-color: var(--clr-neutral-50);
+}
+.form .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+}
+.form .divider > div:nth-child(odd) {
+    height: 1px;
+    width: 100%;
+    background-color: var(--clr-neutral-400);
+}
 
 label {
     color: var(--clr-neutral-800);
@@ -296,9 +317,11 @@ label {
     margin-top: 0.5rem;
     margin-left: 1rem;
 }
-
 .input-container:has(.input-error) input {
     border-color: var(--clr-input-error);
+}
+.input-container:has(.input-error) .label {
+    color: var(--clr-input-error);
 }
 
 .label {
