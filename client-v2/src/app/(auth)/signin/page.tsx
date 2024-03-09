@@ -1,3 +1,10 @@
+import "@/styles/Auth.css";
+import Signin from "../_components/Signin";
+
 export default function SigninPage() {
-    return <div>signin</div>;
+    return (
+        <div className="auth_main">
+            <Signin />
+        </div>
+    );
 }
