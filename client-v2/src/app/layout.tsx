@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import SessionProvider from "@/contexts/SessionProvider";
-import { fetchClient } from "@/utils/fetchClient";
 import { getServerSession } from "@/utils/getServerSession";
 
 const inter = Inter({ subsets: ["latin"] });

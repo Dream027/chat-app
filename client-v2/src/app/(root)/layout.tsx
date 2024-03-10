@@ -1,3 +1,5 @@
+import Navbar from "@/components/Navbar";
+import Sidebar from "@/components/Sidebar";
 import SocketProvider from "@/contexts/SocketProvider";
 
 export default function RootLayout({
@@ -5,5 +7,13 @@ export default function RootLayout({
 }: {
     children: React.ReactNode;
 }) {
-    return <SocketProvider>{children}</SocketProvider>;
+    return (
+        <SocketProvider>
+            <Navbar />
+            <div className="sidebar">
+                <Sidebar />
+                {children}
+            </div>
+        </SocketProvider>
+    );
 }

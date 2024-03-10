@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useSessionState } from "@/contexts/SessionProvider";
 import Image from "next/image";
 import { handleFetch } from "@/utils/handleFetch";
+import { SERVER_URL } from "@/utils/constants";
 
 type FormFields = {
     email: string;
@@ -71,7 +72,16 @@ export default function LoginForm({ state }: { state: boolean }) {
                 <div>or</div>
                 <div></div>
             </div>
-            <button type="button" className="auth_google">
+            <button
+                type="button"
+                className="auth_google"
+                onClick={() => {
+                    window.open(
+                        `${SERVER_URL}/api/users/callback/google`,
+                        "_self"
+                    );
+                }}
+            >
                 <Image src="/google.svg" alt="google" width={24} height={24} />
                 Continue with Google
             </button>

@@ -16,15 +16,12 @@ export const SessionContext = createContext<SessionContext | null>(null);
 
 export function useSession() {
     const session = useContext<SessionContext | null>(SessionContext)?.session;
-    if (!session) throw new Error("Session is null");
     return session;
 }
 
 export function useSessionState() {
     const context = useContext(SessionContext);
-    if (!context?.session || !context?.setSession)
-        throw new Error("Session is null");
-    return [context.session, context.setSession] as const;
+    return [context?.session, context?.setSession] as const;
 }
 
 export default function SessionProvider({

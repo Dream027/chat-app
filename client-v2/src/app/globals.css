@@ -21,6 +21,8 @@
     --clr-card-bg: white;
     --clr-card-border: #ccc8;
     --clr-shadow: #ccc4;
+
+    --navbar-height: 6rem;
 }
 
 * {
@@ -37,6 +39,7 @@ body {
 
 body {
     background: linear-gradient(var(--clr-primary-100), white);
+    height: 100svh;
 }
 
 button {
@@ -97,4 +100,15 @@ label {
     to {
         transform: rotate(360deg);
     }
+}
+
+.sidebar {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 15rem 1fr;
+    height: calc(100svh - var(--navbar-height));
+}
+
+.margined-layout {
+    margin: 100px 0 0 150px;
 }

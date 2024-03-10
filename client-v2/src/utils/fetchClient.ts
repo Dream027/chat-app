@@ -1,10 +1,12 @@
+import { SERVER_URL } from "./constants";
+
 export function fetchClient(
     url: string,
     method: "GET" | "POST" | "PUT" | "DELETE",
     body: any = {},
     options?: RequestInit
 ): Promise<{ data: any; success: boolean; message: string }> {
-    return fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api${url}`, {
+    return fetch(`${SERVER_URL}/api${url}`, {
         ...options,
         credentials: "include",
         method,
