@@ -1,6 +1,8 @@
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import SocketProvider from "@/contexts/SocketProvider";
+import "@/styles/Profile.css";
+import "@/styles/Group.css";
 
 export default function RootLayout({
     children,

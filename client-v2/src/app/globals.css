@@ -112,3 +112,101 @@ label {
 .margined-layout {
     margin: 100px 0 0 150px;
 }
+
+.carousel > :first-child {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+}
+
+.carousel_content {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    padding: 2rem;
+    transition: 0.3s ease-in-out;
+}
+
+.carousel_content.carousel_active {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: all;
+    height: 8rem;
+}
+
+.btn-secondary {
+    background: var(--clr-neutral-100);
+    color: var(--clr-neutral-800);
+}
+
+.btn-secondary:hover {
+    background: var(--clr-neutral-200);
+}
+
+.align-center {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.alert-backdrop {
+    --delay: 600ms;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100svw;
+    height: 100svh;
+    background: hsl(0 0% 0% / 0.4);
+    visibility: hidden;
+    pointer-events: none;
+    transition: var(--delay) ease-in-out;
+    opacity: 0;
+}
+
+.alert-box {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--clr-card-bg);
+    border: 1px solid var(--clr-card-border);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 40px hsl(0 0% 0% / 0.5);
+    transition: var(--delay) ease-in-out;
+}
+
+.alert-backdrop.alert-active {
+    visibility: visible;
+    pointer-events: all;
+    opacity: 1;
+}
+
+.alert-backdrop.alert-active .alert-box {
+    top: 50%;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+input[type="file"] + div {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+input[type="file"] + div > :first-child {
+    padding: 2rem 4rem;
+    border-radius: 0.5rem;
+    border: 1px dashed var(--clr-neutral-600);
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: capitalize;
+    font-size: 1.2rem;
+}

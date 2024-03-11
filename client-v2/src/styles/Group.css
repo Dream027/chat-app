@@ -1,0 +1,59 @@
+.group_main {
+    width: 50%;
+    min-width: 600px;
+}
+
+.group_card {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.group_card p {
+    line-height: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+.group_card h2 {
+    letter-spacing: 2px;
+}
+
+.group_card img {
+    border-radius: 50%;
+}
+
+textarea {
+    background-color: transparent;
+    border-color: var(--clr-neutral-400);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    outline: none;
+    width: 100%;
+    color: var(--clr-neutral-600);
+    font-size: inherit;
+    font-family: inherit;
+    resize: none;
+}
+
+input {
+    background-color: transparent;
+    border-color: var(--clr-neutral-400);
+}
+
+textarea:focus,
+input:focus {
+    border-color: var(--clr-neutral-700);
+}
+
+.group_main img {
+    border-radius: 2rem;
+    margin-bottom: 1rem;
+}
+
+.group_main img + div {
+    margin-bottom: 2rem;
+}

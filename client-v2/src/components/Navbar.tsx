@@ -7,7 +7,7 @@ const navbarOptions = [
     { name: "Send Invitation", path: "/friends/invite" },
     { name: "View Groups", path: "/groups" },
     { name: "Create Group", path: "/groups/create" },
-    { name: "Join Group", path: "/group/join" },
+    { name: "Join Group", path: "/groups/join" },
 ];
 
 export default function Navbar() {

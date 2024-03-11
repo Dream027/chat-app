@@ -1,0 +1,73 @@
+.invitations_main {
+    width: 50%;
+    min-width: 600px;
+    margin: 0 auto;
+}
+
+.invitations_main input {
+    background-color: transparent;
+    border-color: var(--clr-neutral-500);
+}
+
+.invitations_main input:focus {
+    border-color: var(--clr-neutral-700);
+}
+
+.invitations_result {
+    margin-top: 8rem;
+    width: 80%;
+}
+
+.invitations_result > div {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    justify-content: space-between;
+}
+
+.invitations_result > div > div:first-child {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.invitations_result img {
+    border-radius: 50%;
+}
+
+.invitations_main > div:first-child h1 {
+    margin-top: 4rem;
+}
+.invitations_main > div:first-child button {
+    margin-top: 2rem;
+}
+.invitations_main > div:first-child label {
+    margin-top: 2rem;
+}
+
+.invitations_user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.invitations_user > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.invitations_user img {
+    border-radius: 50%;
+}
+
+.profile_main img {
+    border-radius: 2rem;
+}
+
+.profile_main > div:nth-child(2) {
+    margin-top: 1rem;
+}

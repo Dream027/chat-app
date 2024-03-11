@@ -191,3 +191,10 @@
 .auth_card.auth_show-register .auth_form:nth-child(2) {
     transform: translateX(0);
 }
+
+.auth_form input {
+    background-color: var(--clr-neutral-50) !important;
+    color: var(--clr-neutral-600) !important;
+    border-radius: 0.5rem !important;
+    border-color: transparent !important;
+}

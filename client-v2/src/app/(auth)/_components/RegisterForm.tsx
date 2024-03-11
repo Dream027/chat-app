@@ -38,7 +38,7 @@ export default function RegisterForm({ state }: { state: boolean }) {
     }, [state]);
 
     return (
-        <form className="auth_form">
+        <form className="auth_form" onSubmit={handleSubmit(onSubmit)}>
             <div>
                 <h1>Register</h1>
                 <div>

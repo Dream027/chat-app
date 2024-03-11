@@ -1,3 +1,5 @@
+import GroupCreate from "../../_components/CreateGroup";
+
 export default function GroupCreatePage() {
-    return <div>create group</div>;
+    return <GroupCreate />;
 }
