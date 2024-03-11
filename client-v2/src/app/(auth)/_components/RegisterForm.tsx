@@ -25,17 +25,20 @@ export default function RegisterForm({ state }: { state: boolean }) {
     const router = useRouter();
     const { setSession } = useSessionState();
 
-    const onSubmit = useCallback(async (data: FormFields) => {
-        const res = await handleFetch("/users/register", "POST", data);
-        if (res) {
-            setSession(res.user);
-            router.replace("/");
-        }
-    }, []);
+    const onSubmit = useCallback(
+        async (data: FormFields) => {
+            const res = await handleFetch("/users/register", "POST", data);
+            if (res) {
+                setSession(res.user);
+                router.replace("/");
+            }
+        },
+        [router, setSession]
+    );
 
     useEffect(() => {
         reset();
-    }, [state]);
+    }, [state, reset]);
 
     return (
         <form className="auth_form" onSubmit={handleSubmit(onSubmit)}>

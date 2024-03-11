@@ -65,7 +65,7 @@ export default function UserProfile({ session }: { session: User }) {
             });
             router.push("/");
         }
-    }, [name, email]);
+    }, [name, email, router, session, setSession]);
 
     const changeProfilePic = useCallback(async () => {
         if (!file) return;
@@ -87,7 +87,7 @@ export default function UserProfile({ session }: { session: User }) {
             router.refresh();
             setShowChangeProfilePicDialog(false);
         }
-    }, [file]);
+    }, [file, router, session, setSession]);
 
     return (
         <>

@@ -26,7 +26,7 @@ export default function InputGroupchats({ group }: InputGroupchatsProps) {
             data: value,
         });
         setValue("");
-    }, [value]);
+    }, [value, group, sesion]);
 
     return (
         <div className="chat_input">

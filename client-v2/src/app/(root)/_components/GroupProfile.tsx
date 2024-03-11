@@ -29,21 +29,21 @@ export default function GroupProfile({ group }: { group: Group }) {
             }
             setLoading(false);
         })();
-    }, []);
+    }, [group]);
 
     const joinGroup = useCallback(async () => {
         const res = await handleFetch(`/groups/${group._id}/join`, "POST");
         if (res) {
             router.push(`/groups/${group._id}/chat`);
         }
-    }, []);
+    }, [group, router]);
 
     const leavegroup = useCallback(async () => {
         const res = await handleFetch(`/groups/${group._id}/leave`, "POST");
         if (res) {
             router.refresh();
         }
-    }, []);
+    }, [group, router]);
 
     return (
         <div>

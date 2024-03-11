@@ -20,30 +20,39 @@ export default function UserInvatations({ invitations }: UserInvitationProps) {
     const session = useSession();
     const router = useRouter();
 
-    const deleteRequest = useCallback(async (id: string) => {
-        const res = await handleFetch(`/users/${id}/invitations`, "DELETE");
-        if (res) {
-            router.refresh();
-        }
-    }, []);
-    const rejectInvitation = useCallback(async (id: string) => {
-        const res = await handleFetch(
-            `/users/${id}/invitations/reject`,
-            "DELETE"
-        );
-        if (res) {
-            router.refresh();
-        }
-    }, []);
-    const acceptInvitation = useCallback(async (id: string) => {
-        const res = await handleFetch(
-            `/users/${id}/invitations/accept`,
-            "POST"
-        );
-        if (res) {
-            router.refresh();
-        }
-    }, []);
+    const deleteRequest = useCallback(
+        async (id: string) => {
+            const res = await handleFetch(`/users/${id}/invitations`, "DELETE");
+            if (res) {
+                router.refresh();
+            }
+        },
+        [router]
+    );
+    const rejectInvitation = useCallback(
+        async (id: string) => {
+            const res = await handleFetch(
+                `/users/${id}/invitations/reject`,
+                "DELETE"
+            );
+            if (res) {
+                router.refresh();
+            }
+        },
+        [router]
+    );
+    const acceptInvitation = useCallback(
+        async (id: string) => {
+            const res = await handleFetch(
+                `/users/${id}/invitations/accept`,
+                "POST"
+            );
+            if (res) {
+                router.refresh();
+            }
+        },
+        [router]
+    );
 
     return (
         <div className="invitations_main">

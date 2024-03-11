@@ -41,7 +41,7 @@ export default function LoginForm({ state }: { state: boolean }) {
 
     useEffect(() => {
         reset();
-    }, [state]);
+    }, [state, reset]);
 
     return (
         <form className="auth_form" onSubmit={handleSubmit(onSubmit)}>

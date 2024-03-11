@@ -16,7 +16,7 @@ export default function GroupCreate() {
             description: descRef.current?.value,
         });
         router.push(`/groups/${res._id}/edit`);
-    }, []);
+    }, [router]);
     return (
         <div className="margined-layout group_main">
             <h1 style={{ marginBottom: "2rem" }}>Create Group</h1>

@@ -36,7 +36,7 @@ export default function EditGroup({ group }: EditGroupProps) {
             router.refresh();
             setShowChangeProfilePicDialog(false);
         }
-    }, [file]);
+    }, [file, group, router]);
 
     const updateGroup = useCallback(async () => {
         if (!name || !desc) return;
@@ -59,7 +59,7 @@ export default function EditGroup({ group }: EditGroupProps) {
         if (res) {
             router.refresh();
         }
-    }, [desc, name]);
+    }, [desc, name, group, router]);
 
     return (
         <>
