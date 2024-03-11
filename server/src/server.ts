@@ -66,7 +66,7 @@ io.on("connection", (socket: Socket) => {
         const key = `groupJoined-${message.id}`;
         const members = await redis.lrange(key, 0, -1);
 
-        await redis.lpush(`groupChat-${message.id}`, message);
+        await redis.lpush(`groupChat-${message.id}`, JSON.stringify(message));
         members.forEach((member) => {
             if (users.find((user) => user.userId === member)) {
                 io.to(

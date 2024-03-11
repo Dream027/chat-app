@@ -16,7 +16,7 @@ export default function SidebarHeader() {
         if (res) {
             router.replace("/signin");
         }
-    }, []);
+    }, [router]);
     return (
         <div className="sidebar_header">
             <div>

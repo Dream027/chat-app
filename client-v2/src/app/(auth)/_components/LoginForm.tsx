@@ -28,13 +28,16 @@ export default function LoginForm({ state }: { state: boolean }) {
     const router = useRouter();
     const { setSession } = useSessionState();
 
-    const onSubmit = useCallback(async (data: FormFields) => {
-        const res = await handleFetch("/users/login", "POST", data);
-        if (res) {
-            setSession(res.user);
-            router.replace("/");
-        }
-    }, []);
+    const onSubmit = useCallback(
+        async (data: FormFields) => {
+            const res = await handleFetch("/users/login", "POST", data);
+            if (res) {
+                setSession(res.user);
+                router.replace("/");
+            }
+        },
+        [router, setSession]
+    );
 
     useEffect(() => {
         reset();

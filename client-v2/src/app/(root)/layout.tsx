@@ -3,6 +3,7 @@ import Sidebar from "@/components/Sidebar";
 import SocketProvider from "@/contexts/SocketProvider";
 import "@/styles/Profile.css";
 import "@/styles/Group.css";
+import "@/styles/Chat.css";
 
 export default function RootLayout({
     children,
