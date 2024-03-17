@@ -2,6 +2,10 @@ import { fetchServer } from "@/utils/fetchServer";
 import Image from "next/image";
 import Link from "next/link";
 
+export const metadata = {
+    title: "All Groups Joined",
+};
+
 export default async function UserGroupsPage() {
     const groups = (await fetchServer("/groups/all", "GET")) as Group[];
 

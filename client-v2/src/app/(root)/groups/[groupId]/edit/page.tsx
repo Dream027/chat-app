@@ -3,6 +3,10 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import EditGroup from "@/app/(root)/_components/EditGroup";
 
+export const metadata = {
+    title: "Edit Group",
+};
+
 export default async function GroupPage({
     params: { groupId },
 }: {

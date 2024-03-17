@@ -3,6 +3,10 @@ import Image from "next/image";
 import GroupProfile from "../../_components/GroupProfile";
 import { notFound } from "next/navigation";
 
+export const metadata = {
+    title: "Group",
+};
+
 export default async function GroupPage({
     params: { groupId },
 }: {

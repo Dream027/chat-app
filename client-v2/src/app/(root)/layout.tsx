@@ -5,6 +5,10 @@ import "@/styles/Profile.css";
 import "@/styles/Group.css";
 import "@/styles/Chat.css";
 
+export const metadata = {
+    description: "ChatterUp: Where real-time connections thrive, effortlessly.",
+};
+
 export default function RootLayout({
     children,
 }: {

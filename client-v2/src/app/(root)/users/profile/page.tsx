@@ -4,6 +4,10 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import UserProfile from "../../_components/UserProfile";
 
+export const metadata = {
+    title: "Profile",
+};
+
 export default async function UserProfilePage() {
     const session = await getServerSession();
     if (!session) notFound();
