@@ -1,0 +1,16 @@
+body {
+    background-color: var(--clr-neutral-800);
+}
+
+.self-video {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    height: 6rem;
+    width: 8rem;
+}
+
+.self-video video {
+    height: 100%;
+    width: 100%;
+}

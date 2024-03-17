@@ -3,7 +3,6 @@ import userRoute from "./routes/user.route";
 import cors from "cors";
 import friendRoute from "./routes/friend.route";
 import groupRoute from "./routes/group.route";
-// import session from "express-session";
 import cookieParser from "cookie-parser";
 import "dotenv/config";
 
@@ -22,19 +21,6 @@ app.use(
     })
 );
 app.use(express.urlencoded({ extended: true }));
-// app.use(
-//     session({
-//         secret: "",
-//         resave: false,
-//         saveUninitialized: true,
-//         cookie: {
-//             maxAge: 1000 * 60 * 60 * 24 * 2,
-//             sameSite: "none",
-//             httpOnly: true,
-//             secure: true,
-//         },
-//     })
-// );
 app.use(cookieParser());
 
 app.get("/", (req, res) => {

@@ -6,30 +6,35 @@ import { generateChatId } from "./utils/generateChatId";
 
 const server = createServer(app);
 
-const PORT = process.env.PORT || 4000;
-(async () => {
-    await connectToDb();
-    server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-})();
-
 const io = new Server(server, {
     cors: {
-        origin: (req, cb) => {
-            cb(null, true);
-        },
+        origin: "http://localhost:3000",
         credentials: true,
     },
 });
 
+// variables for socket
 let users: { socketId: string; userId: string }[] = [];
 
 io.use(async (socket, next) => {
-    if (socket.handshake.headers.cookie?.split("=")[0] !== "token") {
+    const cookieHeader = socket.handshake.headers.cookie;
+    const cookies = cookieHeader?.split(";");
+
+    if (!cookieHeader || !cookies) {
+        next(new Error("Authentication error"));
+    }
+    cookies?.forEach((cookie) => {
+        const [key, value] = cookie.trim().split("=");
+        if (key === "token" && value) {
+            socket.handshake.headers.token = value;
+        }
+    });
+    if (!socket.handshake.headers.token) {
         next(new Error("Authentication error"));
     }
 
     const session = await redis.get(
-        `session-${socket.handshake.headers.cookie?.split("=")[1]}`
+        `session-${socket.handshake.headers.token}`
     );
     if (!session) {
         next(new Error("Authentication error"));
@@ -41,6 +46,12 @@ io.use(async (socket, next) => {
         });
         next();
     }
+});
+
+io.engine.on("connection_error", (err) => {
+    console.log(err.code); // the error code, for example 1
+    console.log(err.message); // the error message, for example "Session ID unknown"
+    console.log(err.context); // some additional error context
 });
 
 io.on("connection", (socket: Socket) => {
@@ -80,3 +91,14 @@ io.on("connection", (socket: Socket) => {
         users = users.filter((user) => user.socketId !== socket.id);
     });
 });
+
+//
+//
+//
+// Server Listening
+
+const PORT = process.env.PORT || 4000;
+(async () => {
+    await connectToDb();
+    server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+})();

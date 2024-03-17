@@ -1,5 +1,6 @@
 import Link from "next/link";
 import "./styles/Navbar.css";
+import Image from "next/image";
 
 const navbarOptions = [
     { name: "Home", path: "/" },
@@ -13,7 +14,9 @@ const navbarOptions = [
 export default function Navbar() {
     return (
         <header>
-            <div>logo</div>
+            <div>
+                <Image src="/logo.svg" alt="logo" width={40} height={40} />
+            </div>
             <nav>
                 <menu>
                     {navbarOptions.map((option) => (

@@ -1,3 +1,7 @@
+body:has(.auth_form) {
+    background: linear-gradient(var(--clr-primary-100), white);
+}
+
 .auth_main {
     height: 100svh;
     display: grid;
