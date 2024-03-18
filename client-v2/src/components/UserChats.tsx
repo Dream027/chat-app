@@ -2,7 +2,7 @@
 
 import { useSession } from "@/contexts/SessionProvider";
 import { socket } from "@/utils/socket";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type UserChatsProps = {
     chats: Message[];
@@ -11,6 +11,11 @@ type UserChatsProps = {
 export default function UserChats({ chats }: UserChatsProps) {
     const session = useSession();
     const [messages, setMessages] = useState(chats);
+    const chatsRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        chatsRef.current?.scrollTo(0, chatsRef.current.scrollHeight);
+    }, [messages]);
 
     useEffect(() => {
         function onMessage(message: Message) {
@@ -25,7 +30,7 @@ export default function UserChats({ chats }: UserChatsProps) {
     }, []);
 
     return (
-        <div className="chat_container">
+        <div className="chat_container" ref={chatsRef}>
             {messages.map((chat, i) => (
                 <div key={i}>
                     <p

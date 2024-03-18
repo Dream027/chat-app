@@ -18,7 +18,10 @@ export default async function GroupChatPage({
         notFound();
     }
 
-    const chats = await fetchServer(`/groups/chats/${groupId}`, "GET");
+    const chats = (await fetchServer(
+        `/groups/chats/${groupId}`,
+        "GET"
+    )) as Message[];
     if (chats === null) {
         notFound();
     }
@@ -26,7 +29,7 @@ export default async function GroupChatPage({
     return (
         <div>
             <ChatHeader image={group.image} name={group.name} />
-            <GroupChats chats={chats} />
+            <GroupChats chats={chats.reverse()} />
             <InputGroupchats group={group} />
         </div>
     );
