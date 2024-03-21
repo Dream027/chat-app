@@ -15,6 +15,7 @@ const io = new Server(server, {
 
 // variables for socket
 let users: { socketId: string; userId: string }[] = [];
+let groups: { id: string; users: string[] }[] = [];
 
 io.use(async (socket, next) => {
     const cookieHeader = socket.handshake.headers.cookie;
@@ -55,11 +56,6 @@ io.engine.on("connection_error", (err) => {
 });
 
 io.on("connection", (socket: Socket) => {
-    socket.on("me", () => {
-        const user = users.find((user) => user.socketId === socket.id);
-        socket.emit("me", user);
-    });
-
     socket.on("chat-message", async (message: any) => {
         await redis.rpush(
             `chat-${generateChatId(message.sender, message.receiver)}`,
@@ -85,6 +81,23 @@ io.on("connection", (socket: Socket) => {
                 ).emit("group-message", message);
             }
         });
+    });
+
+    socket.on("join-group", (id) => {
+        io.to(id).emit("user-joined", socket.id);
+        socket.join(id);
+    });
+
+    socket.on("offer", ({ offer, id }) => {
+        socket.broadcast.to(id).emit("offer", offer);
+    });
+
+    socket.on("answer", ({ answer, id }) => {
+        socket.broadcast.to(id).emit("answer", answer);
+    });
+
+    socket.on("candidate", ({ candidate, id }) => {
+        socket.broadcast.to(id).emit("candidate", candidate);
     });
 
     socket.on("disconnect", () => {

@@ -1,16 +1,31 @@
-body {
-    background-color: var(--clr-neutral-800);
+body:has(.call_main) {
+    background: linear-gradient(var(--clr-neutral-800), var(--clr-neutral-700));
 }
 
-.self-video {
-    position: absolute;
-    top: 2rem;
-    left: 2rem;
-    height: 6rem;
-    width: 8rem;
+video {
+    background-color: white;
 }
 
-.self-video video {
-    height: 100%;
-    width: 100%;
+.call_main {
+    height: 100svh;
+    width: 100svw;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    padding: 2rem;
+    margin: 2rem;
+    gap: 2rem;
+}
+
+.call_main video {
+    width: 500px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.call_container {
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
 }

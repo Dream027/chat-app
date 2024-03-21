@@ -14,7 +14,7 @@ export default async function middleware(req: NextRequest) {
         },
     });
 
-    if (!session?.success && isSigninPage) {
+    if (!session?.success && !isSigninPage) {
         return NextResponse.redirect(new URL("/signin", req.url));
     }
 
