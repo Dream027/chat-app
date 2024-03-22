@@ -3,7 +3,7 @@
 import Alert from "@/components/Alert";
 import { useSessionState } from "@/contexts/SessionProvider";
 import { SERVER_URL } from "@/utils/constants";
-import { handleFetch } from "@/utils/handleFetch";
+import { handleFetch, handleFileUpload } from "@/utils/handleFetch";
 import { Camera, PenBox } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -71,18 +71,12 @@ export default function UserProfile({ session }: { session: User }) {
         if (!file) return;
         const data = new FormData();
         data.append("profilePicture", file);
-        const res = await fetch(`${SERVER_URL}/api/users/profile/image`, {
-            method: "PUT",
-            body: data,
-            credentials: "include",
-        });
+        const res = await handleFileUpload("/api/users/profile/image", data);
 
-        if (res.ok) {
-            const data = await res.json();
-            console.log(data);
+        if (res) {
             setSession({
                 ...session,
-                image: data.data.image,
+                image: res.image,
             });
             router.refresh();
             setShowChangeProfilePicDialog(false);

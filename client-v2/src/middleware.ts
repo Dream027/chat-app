@@ -22,5 +22,12 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/"],
+    matcher: [
+        "/",
+        "/signin",
+        "/users/:path*",
+        "/groups/:path*",
+        "/chat/:path*",
+        "/friends/:path*",
+    ],
 };

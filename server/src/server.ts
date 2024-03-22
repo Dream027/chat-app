@@ -21,25 +21,14 @@ let users: { socketId: string; userId: string }[] = [];
 let groups: { id: string; users: string[] }[] = [];
 
 io.use(async (socket, next) => {
-    const cookieHeader = socket.handshake.headers.cookie;
-    const cookies = cookieHeader?.split(";");
+    const token = socket.handshake.auth.token;
+    console.log(socket.handshake.auth.token);
 
-    if (!cookieHeader || !cookies) {
-        next(new Error("Authentication error"));
-    }
-    cookies?.forEach((cookie) => {
-        const [key, value] = cookie.trim().split("=");
-        if (key === "token" && value) {
-            socket.handshake.headers.token = value;
-        }
-    });
-    if (!socket.handshake.headers.token) {
+    if (!token) {
         next(new Error("Authentication error"));
     }
 
-    const session = await redis.get(
-        `session-${socket.handshake.headers.token}`
-    );
+    const session = await redis.get(`session-${token}`);
     if (!session) {
         next(new Error("Authentication error"));
     } else {

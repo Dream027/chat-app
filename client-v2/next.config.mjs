@@ -15,6 +15,9 @@ const nextConfig = {
             },
             {
                 hostname: "lh3.googleusercontent.com"
+            },
+            {
+                hostname: "7183-38-183-43-56.ngrok-free.app"
             }
         ]
     }
