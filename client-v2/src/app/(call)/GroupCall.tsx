@@ -82,8 +82,8 @@ export default function GroupCall() {
             .then((stream) => {
                 selfVideoRef.current!.srcObject = stream;
                 peer = new Peer(undefined as any, {
-                    host: "localhost",
-                    port: 9000,
+                    host: process.env.NEXT_PUBLIC_PEER_HOST!,
+                    port: parseInt(process.env.NEXT_PUBLIC_PEER_PORT!),
                 });
                 peer.on("open", (id) => {
                     socket.emit("join-group", { id, groupId: params.groupId });
