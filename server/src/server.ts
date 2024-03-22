@@ -21,8 +21,11 @@ let users: { socketId: string; userId: string }[] = [];
 let groups: { id: string; users: string[] }[] = [];
 
 io.use(async (socket, next) => {
-    const token = socket.handshake.auth.token;
-    console.log(socket.handshake.auth.token);
+    const token = socket.handshake.headers.cookie
+        ?.split(";")
+        .filter((c) => c.startsWith("token="))[0]
+        ?.split("=")[1]
+        .trim();
 
     if (!token) {
         next(new Error("Authentication error"));

@@ -15,7 +15,7 @@ export async function handleFetch(
             token = cookie[1].trim();
         }
     }
-    if (!token) {
+    if (!token && !(url.includes("login") || url.includes("register"))) {
         toast.error("Login first");
         return null;
     }
@@ -42,7 +42,7 @@ export async function handleFileUpload(url: string, body: FormData) {
             token = cookie[1].trim();
         }
     }
-    if (!token) {
+    if (!token && !(url.includes("login") || url.includes("register"))) {
         toast.error("Login first");
         return null;
     }
