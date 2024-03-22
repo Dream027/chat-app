@@ -3,6 +3,10 @@
     --chat-inputs-height: 4rem;
 }
 
+.chat_main {
+    position: relative;
+}
+
 .chat_header {
     display: flex;
     align-items: center;
@@ -56,4 +60,58 @@
     background-color: var(--clr-primary-400) !important;
     margin-left: auto;
     color: white;
+}
+
+.chat_image_sent img {
+    right: 0;
+    left: unset !important;
+}
+
+.chat_image {
+    position: relative;
+    height: 200px;
+}
+
+.chat_image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: contain;
+    background-color: hsl(0 0% 95% / 0.8);
+    padding: 1rem;
+}
+
+.file_input {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+.file_input > div {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+.file_input svg {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.chat_selected {
+    background-color: var(--clr-neutral-100);
+}
+
+.chat_delete {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    cursor: pointer;
+    padding: 1rem;
+    border-radius: 50%;
+    background-color: var(--clr-neutral-100);
 }

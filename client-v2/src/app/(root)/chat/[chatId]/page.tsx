@@ -29,7 +29,7 @@ export default async function ChatRoomPage({
     }
 
     return (
-        <div>
+        <div className="chat_main">
             <ChatHeader image={friend.image} name={friend.name} />
             <UserChats chats={chats} />
             <InputUserChats friend={friend} />

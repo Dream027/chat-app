@@ -1,79 +1,167 @@
 "use client";
 
-import peerConnection from "@/utils/PeerConnection";
 import { socket } from "@/utils/socket";
+import { PhoneCall } from "lucide-react";
 import { useParams } from "next/navigation";
+import Peer from "peerjs";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function GroupCall() {
     const selfVideoRef = useRef<HTMLVideoElement>(null);
     const params = useParams();
-    const [selfMedia, setselfMedia] = useState<MediaStream>();
-    const remoteVideoRef = useRef<HTMLVideoElement>(null);
-    const [remoteStream, setRemoteStream] = useState<MediaStream>();
+
+    // useEffect(() => {
+    //     (async () => {
+    //         const stream = await navigator.mediaDevices.getUserMedia({
+    //             video: true,
+    //             audio: true,
+    //         });
+    //         setselfMedia(stream);
+    //         selfVideoRef.current!.srcObject = stream;
+    //         const peer = new Peer(undefined as any, {
+    //             host: "localhost",
+    //             port: 9000,
+    //         });
+    //         peer.on("open", (id) => {
+    //             socket.emit("join-group", { id, groupId: params.groupId });
+    //         });
+
+    //         const domVidContainer =
+    //             document.getElementsByClassName("call_container")[0];
+
+    //         function onUserJoined(id: string) {
+    //             const call = peer.call(id, stream);
+    //             const video = document.createElement("video");
+    //             video.autoplay = true;
+    //             video.muted = true;
+
+    //             call.on("stream", (remoteStream) => {
+    //                 video.srcObject = remoteStream;
+    //                 domVidContainer?.appendChild(video);
+    //             });
+    //             call.on("close", () => {
+    //                 video.remove();
+    //             });
+    //         }
+
+    //         peer.on("call", (call) => {
+    //             console.log("call", call);
+    //         });
+
+    //         socket.on("user-joined", onUserJoined);
+    //     })();
+
+    //     return () => {
+    //         socket.emit("leave-group", {
+    //             groupId: params.groupId,
+    //             id: myPeer?.id,
+    //         });
+    //         myPeer?.disconnect();
+    //         myPeer?.destroy();
+    //         socket.off("user-joined");
+    //         myPeer?.off
+    //     };
+    // }, []);
+
+    // useEffect(() => {
+    //     function onUserLeft(id: string) {
+    //         console.log("user left", id);
+    //     }
+
+    //     socket.on("user-left", onUserLeft);
+
+    //     return () => {
+    //         socket.off("user-left", onUserLeft);
+    //     };
+    // }, []);
 
     useEffect(() => {
-        (async () => {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: true,
+        let peer: Peer;
+        navigator.mediaDevices
+            .getUserMedia({ video: true, audio: true })
+            .then((stream) => {
+                selfVideoRef.current!.srcObject = stream;
+                peer = new Peer(undefined as any, {
+                    host: "localhost",
+                    port: 9000,
+                });
+                peer.on("open", (id) => {
+                    socket.emit("join-group", { id, groupId: params.groupId });
+                });
+
+                const domVidContainer =
+                    document.getElementsByClassName("call_container")[0];
+                const remoteVideo = domVidContainer
+                    .children[1] as HTMLVideoElement;
+
+                peer.on("call", (call) => {
+                    console.log("call ", call);
+                    call.answer(stream);
+                    call.on("stream", (remoteStream) => {
+                        remoteVideo.srcObject = remoteStream;
+                    });
+
+                    call.on("close", () => {
+                        console.log("call closed");
+                        remoteVideo.srcObject = null;
+                        remoteVideo.style.display = "none";
+                    });
+                });
+
+                socket.on("user-joined", (id) => {
+                    console.log("user joined", id);
+                    const call = peer.call(id, stream);
+                    call.on("stream", (remoteStream) => {
+                        remoteVideo.style.display = "block";
+                        remoteVideo.srcObject = remoteStream;
+                    });
+
+                    call.on("close", () => {
+                        console.log("call closed");
+                        remoteVideo.srcObject = null;
+                        remoteVideo.style.display = "none";
+                    });
+                });
+
+                socket.on("user-left", (id) => {
+                    console.log("user left", id);
+                });
+                socket.on("user-disconnected", () => {
+                    console.log("user disconnected");
+                    remoteVideo.srcObject = null;
+                    remoteVideo.style.display = "none";
+                });
             });
-            setselfMedia(stream);
-            selfVideoRef.current!.srcObject = stream;
-            const offer = await peerConnection.createOffer();
-            socket.emit("offer", { id: params.groupId, offer });
-        })();
-    }, []);
-
-    useEffect(() => {
-        function onUserJoined(id: string) {}
-
-        async function onGetOffer(offer: any) {
-            const answer = await peerConnection.createAnswer(offer);
-            socket.emit("answer", { id: params.groupId, answer });
-        }
-
-        async function onGetAnswer(answer: any) {
-            await peerConnection.setRemoteDescription(answer);
-
-            selfMedia?.getTracks().forEach((track) => {
-                peerConnection.instance?.addTrack(track, selfMedia);
-            });
-        }
-
-        socket.emit("join-group", params.groupId);
-        socket.on("user-joined", onUserJoined);
-        socket.on("offer", onGetOffer);
-        socket.on("answer", onGetAnswer);
 
         return () => {
-            socket.emit("leave-group", params.groupId);
-            socket.off("user-joined", onUserJoined);
-            socket.off("answer", onGetAnswer);
-            socket.off("offer", onGetOffer);
+            socket.emit("leave-group", {
+                groupId: params.groupId,
+                id: peer?.id,
+            });
+            peer?.disconnect();
+            peer?.destroy();
+            socket.off("user-joined");
+            socket.off("user-left");
+            socket.off("user-disconnected");
         };
-    }, []);
-
-    useEffect(() => {
-        peerConnection.instance?.addEventListener("track", (event) => {
-            console.log("track event", event);
-            const streams = event.streams;
-
-            if (streams.length > 0) {
-                setRemoteStream(streams[0]);
-                remoteVideoRef.current!.srcObject = streams[0];
-            }
-        });
-    }, []);
+    }, [params.groupId]);
 
     return (
         <div className="call_main">
             <div className="call_container">
                 <video muted autoPlay ref={selfVideoRef}></video>
-                <video autoPlay ref={remoteVideoRef}></video>
+                <video muted autoPlay></video>
             </div>
 
-            <div className="call_controls"></div>
+            <div className="call_controls">
+                <button
+                    onClick={() => {
+                        window.location.href = "/";
+                    }}
+                >
+                    <PhoneCall />
+                </button>
+            </div>
         </div>
     );
 }

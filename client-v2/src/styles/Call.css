@@ -24,8 +24,13 @@ video {
 }
 
 .call_container {
-    display: grid;
-    place-items: center;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 2rem;
+}
+
+.call_controls button {
+    background-color: hsl(0 60% 60%);
+    color: white;
 }
