@@ -56,7 +56,7 @@ export default function GroupChats({ chats }: GroupChatsProps) {
                 setSelectedChats((prev) => [...prev, timestamp]);
             }
         },
-        [selectedChats]
+        [selectedChats, session]
     );
 
     const deleteChats = useCallback(() => {

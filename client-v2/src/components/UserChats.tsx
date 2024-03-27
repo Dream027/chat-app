@@ -54,7 +54,7 @@ export default function UserChats({ chats }: UserChatsProps) {
                 setSelectedChats((prev) => [...prev, timestamp]);
             }
         },
-        [selectedChats]
+        [selectedChats, session]
     );
 
     const deleteChats = useCallback(() => {

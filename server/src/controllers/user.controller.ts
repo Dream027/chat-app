@@ -43,16 +43,12 @@ const registerUser = asyncHandler(async (req, res) => {
         60 * 60 * 24 * 2
     );
 
-    const url = process.env.CLIENT_URL;
-    const domain = url?.split(":")[1];
-
     return res
         .cookie("token", token, {
             maxAge: 60 * 60 * 24 * 1000 * 2,
             secure: true,
             httpOnly: false,
             sameSite: "none",
-            domain: domain?.substring(2, domain?.length),
         })
         .status(200)
         .json(
@@ -100,16 +96,12 @@ const loginUser = asyncHandler(async (req, res) => {
         60 * 60 * 24 * 2
     );
 
-    const url = process.env.CLIENT_URL;
-    const domain = url?.split(":")[1];
-
     return res
         .cookie("token", token, {
             maxAge: 60 * 60 * 24 * 1000 * 2,
             secure: true,
             httpOnly: false,
             sameSite: "none",
-            domain: domain?.substring(2, domain?.length),
         })
         .status(200)
         .json(
