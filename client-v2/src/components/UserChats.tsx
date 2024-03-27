@@ -42,7 +42,10 @@ export default function UserChats({ chats }: UserChatsProps) {
     }, []);
 
     const selectChat = useCallback(
-        (timestamp: number) => {
+        (timestamp: number, sender: string) => {
+            if (session?._id !== sender) {
+                return;
+            }
             if (selectedChats.includes(timestamp)) {
                 setSelectedChats((prev) =>
                     prev.filter((chat) => chat !== timestamp)
@@ -81,19 +84,14 @@ export default function UserChats({ chats }: UserChatsProps) {
                                 : ""
                         }`}
                         key={chat.timestamp}
-                        onClick={() => selectChat(chat.timestamp)}
+                        onClick={() => selectChat(chat.timestamp, chat.sender)}
                     >
-                        <Image
-                            src={chat.data}
-                            alt=""
-                            width={200}
-                            height={200}
-                        />
+                        <img src={chat.data} alt="" />
                     </div>
                 ) : (
                     <div
                         key={chat.timestamp}
-                        onClick={() => selectChat(chat.timestamp)}
+                        onClick={() => selectChat(chat.timestamp, chat.sender)}
                         className={
                             selectedChats.includes(chat.timestamp)
                                 ? "chat_selected"

@@ -21,19 +21,22 @@ let users: { socketId: string; userId: string }[] = [];
 let groups: { id: string; users: string[] }[] = [];
 
 io.use(async (socket, next) => {
-    const token = socket.handshake.headers.cookie
-        ?.split(";")
-        .filter((c) => c.startsWith("token="))[0]
-        ?.split("=")[1]
-        .trim();
+    // const token = socket.handshake.headers.cookie
+    //     ?.split(";")
+    //     .filter((c) => c.startsWith("token="))[0]
+    //     ?.split("=")[1]
+    //     .trim();
 
+    console.log("auth -> ", socket.handshake.auth);
+    const token = socket.handshake.auth.token;
     if (!token) {
-        next(new Error("Authentication error"));
+        next(new Error("No token available"));
     }
 
     const session = await redis.get(`session-${token}`);
+    console.log("session -> ", session);
     if (!session) {
-        next(new Error("Authentication error"));
+        next(new Error("No session found"));
     } else {
         const sessionData = JSON.parse(session);
         users.push({

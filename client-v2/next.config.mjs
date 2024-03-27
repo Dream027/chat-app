@@ -2,10 +2,14 @@
 const nextConfig = {
     rewrites: async () => {
         return [
+            // {
+            //     source: "/api/:path*",
+            //     destination: "http://localhost:4000/api/:path*",
+            // },
             {
                 source: "/api/:path*",
-                destination: "http://localhost:4000/api/:path*",
-            },
+                destination: "https://sharp-loyal-opossum.ngrok-free.app/api/:path*"
+            }
         ];
     },
     images: {
