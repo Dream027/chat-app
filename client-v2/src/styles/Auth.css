@@ -202,3 +202,33 @@ body:has(.auth_form) {
     border-radius: 0.5rem !important;
     border-color: transparent !important;
 }
+
+.google_header > div:not(:first-child) {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.google_header img {
+    border-radius: 50%;
+}
+
+.google_main h1 {
+    letter-spacing: 2px;
+    margin-bottom: 2rem;
+}
+
+.google_form {
+    margin-top: 4rem;
+    display: grid;
+    max-width: 600px;
+}
+
+.google_form label {
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.google_form > div:last-child {
+    margin-top: 2rem;
+}

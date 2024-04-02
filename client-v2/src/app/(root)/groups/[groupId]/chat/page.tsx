@@ -28,7 +28,11 @@ export default async function GroupChatPage({
 
     return (
         <div>
-            <ChatHeader image={group.image} name={group.name} />
+            <ChatHeader
+                image={group.image}
+                name={group.name}
+                link={`/groups/${groupId}`}
+            />
             <GroupChats chats={chats.reverse()} />
             <InputGroupchats group={group} />
         </div>

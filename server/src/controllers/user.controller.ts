@@ -574,7 +574,7 @@ const loginWithGoogle = asyncHandler(async (req, res) => {
     })) as UserDocument;
 
     if (!existingUser) {
-        const url = new URL("http://localhost:3000/signin/google");
+        const url = new URL(`${process.env.CLIENT_URL}/signin/google`);
         url.searchParams.append("email", parsedUser.data.email);
         url.searchParams.append("name", parsedUser.data.name);
         url.searchParams.append("image", parsedUser.data.image);
@@ -601,7 +601,7 @@ const loginWithGoogle = asyncHandler(async (req, res) => {
                 secure: true,
                 maxAge: 1000 * 60 * 60 * 24 * 2,
             })
-            .redirect("http://localhost:3000");
+            .redirect(process.env.CLIENT_URL!);
     }
 });
 

@@ -1,13 +1,25 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type ChatHeaderProps = {
     image: string;
     name: string;
+    link?: string;
 };
 
-export default function ChatHeader({ image, name }: ChatHeaderProps) {
+export default function ChatHeader({ image, name, link }: ChatHeaderProps) {
+    const router = useRouter();
     return (
-        <div className="chat_header">
+        <div
+            className="chat_header"
+            onClick={() => {
+                if (link) {
+                    router.push(link);
+                }
+            }}
+        >
             <Image
                 src={image}
                 alt="profile image"
