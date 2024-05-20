@@ -12,6 +12,7 @@ export default function RoomCall() {
     const peerInstance = useRef<Peer | null>(null);
     const [selfStream, setSelfStream] = useState<MediaStream>();
     const router = useRouter();
+    const params = useParams();
 
     // useEffect(() => {
     //     socket.on("peer-left", () => {
@@ -22,11 +23,12 @@ export default function RoomCall() {
     // }, []);
 
     useEffect(() => {
+        if (!navigator) return;
         if (!selfStream) return;
         socket.on("peer-joined", (id) => {
             socket.emit("peer-data", {
                 id: peerInstance.current?.id,
-                room: "test",
+                room: params.roomId,
             });
             peerInstance.current?.call(id, selfStream);
         });
@@ -42,9 +44,10 @@ export default function RoomCall() {
     }, [selfStream]);
 
     useEffect(() => {
+        if (!navigator) return;
         const peer = new Peer({ host: "localhost", port: 9000 });
         peer.on("open", (id) => {
-            socket.emit("room-joined", { id: peer.id, room: "test" });
+            socket.emit("room-joined", { id: peer.id, room: params.roomId });
         });
 
         peer.on("call", (call) => {
@@ -64,6 +67,7 @@ export default function RoomCall() {
     }, [selfStream]);
 
     useEffect(() => {
+        if (!navigator) return;
         navigator.mediaDevices
             .getUserMedia({ audio: false, video: true })
             .then((stream) => {
