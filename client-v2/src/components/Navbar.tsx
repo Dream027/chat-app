@@ -9,6 +9,7 @@ const navbarOptions = [
     { name: "View Groups", path: "/groups" },
     { name: "Create Group", path: "/groups/create" },
     { name: "Join Group", path: "/groups/join" },
+    { name: "Join Call", path: "/call" },
 ];
 
 export default function Navbar() {

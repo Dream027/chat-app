@@ -79,7 +79,7 @@ export default function GoogleLogin({
                 toast.error("Something went wrong");
             }
         },
-        []
+        [email, name, image, router, setSession]
     );
 
     return (

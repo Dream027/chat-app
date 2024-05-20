@@ -1,5 +1,6 @@
 import { NextFunction, RequestHandler, Request, Response } from "express";
 import { ApiError } from "./ApiError";
+import { JsonWebTokenError } from "jsonwebtoken";
 
 export function asyncHandler(
     handler: RequestHandler<any, any, any, any>
@@ -14,6 +15,13 @@ export function asyncHandler(
                     message: error.message,
                     success: false,
                     statusCode: error.statusCode,
+                });
+            } else if (error instanceof JsonWebTokenError) {
+                res.status(402).json({
+                    data: null,
+                    message: error.message,
+                    success: false,
+                    statusCode: 402,
                 });
             } else if (error instanceof Error) {
                 console.log(error);

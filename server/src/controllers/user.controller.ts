@@ -30,9 +30,9 @@ const registerUser = asyncHandler(async (req, res) => {
         password,
     })) as UserDocument;
 
-    const token = uuidv4().replaceAll("-", "");
+    const token = newUser.generateAccessToken();
     await redis.set(
-        `session-${token}`,
+        `session-${newUser._id}`,
         JSON.stringify({
             _id: newUser._id,
             name: newUser.name,
@@ -83,9 +83,9 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Wrong password.");
     }
 
-    const token = uuidv4().replaceAll("-", "");
+    const token = user.generateAccessToken();
     await redis.set(
-        `session-${token}`,
+        `session-${user._id}`,
         JSON.stringify({
             _id: user._id,
             name: user.name,
@@ -581,9 +581,9 @@ const loginWithGoogle = asyncHandler(async (req, res) => {
 
         return res.redirect(url.toString());
     } else {
-        const token = uuidv4().replaceAll("-", "");
+        const token = existingUser.generateAccessToken()
         await redis.set(
-            `session-${token}`,
+            `session-${existingUser._id}`,
             JSON.stringify({
                 _id: existingUser._id,
                 name: existingUser.name,
